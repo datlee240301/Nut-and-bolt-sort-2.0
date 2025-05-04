@@ -5,6 +5,7 @@ using DG.Tweening;
 public class TubeController : MonoBehaviour {
     public Transform[] spawnPoints;
     public GameObject[] nutPrefabs;
+    public GameObject[] specialNutsPrefabs;
     public Transform waitPoint;
 
     private List<GameObject> currentNuts = new List<GameObject>();
@@ -13,13 +14,24 @@ public class TubeController : MonoBehaviour {
     void Start() {
         SpawnNuts();
     }
+    private GameObject[] spawnedSpecialNuts; 
 
     void SpawnNuts() {
+        spawnedSpecialNuts = new GameObject[spawnPoints.Length]; 
+
         for (int i = 0; i < Mathf.Min(spawnPoints.Length, nutPrefabs.Length); i++) {
             GameObject nut = Instantiate(nutPrefabs[i], spawnPoints[i].position, Quaternion.identity);
             nut.transform.SetParent(transform);
             originalScale = nut.transform.localScale;
             currentNuts.Add(nut);
+        }
+
+        for (int i = 0; i < Mathf.Min(spawnPoints.Length, specialNutsPrefabs.Length); i++) {
+            if (specialNutsPrefabs[i] == null) continue;
+            GameObject specialNut = Instantiate(specialNutsPrefabs[i], spawnPoints[i].position, Quaternion.identity);
+            specialNut.transform.SetParent(transform);
+            specialNut.transform.localScale = originalScale;
+            spawnedSpecialNuts[i] = specialNut;
         }
     }
 
@@ -72,20 +84,29 @@ public class TubeController : MonoBehaviour {
 
     void ReceiveNut() {
         GameObject nut = TubeManager.Instance.liftedNut;
+        TubeController source = TubeManager.Instance.sourceTube;
 
         nut.transform.DOMove(waitPoint.position, 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
             int targetIndex = currentNuts.Count;
             Vector3 targetPos = spawnPoints[targetIndex].position;
-
             nut.transform.DOMove(targetPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
                 nut.transform.SetParent(transform);
                 nut.transform.localScale = originalScale;
                 currentNuts.Add(nut);
+
+                int fromIndex = source.currentNuts.Count; 
+                if (fromIndex > 0) {
+                    GameObject specialNutAbove = source.spawnedSpecialNuts[fromIndex - 1];
+                    if (specialNutAbove != null) {
+                        specialNutAbove.SetActive(false); 
+                    }
+                }
                 TubeManager.Instance.ClearLiftedNut();
                 GameManager.Instance.CheckWinCondition();
             });
         });
     }
+
     public List<GameObject> GetCurrentNuts() {
         return currentNuts;
     }

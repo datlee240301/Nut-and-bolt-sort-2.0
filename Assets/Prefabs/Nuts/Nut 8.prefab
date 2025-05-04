@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3299473406827885594}
   - component: {fileID: 8423964872948181888}
-  - component: {fileID: 3319550445258664968}
-  - component: {fileID: -7731018814590344016}
+  - component: {fileID: 5104004542446354960}
+  - component: {fileID: -2131296484623477782}
   m_Layer: 0
   m_Name: Nut 8
   m_TagString: 8
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.89433956, g: 0.44159, b: 0.065809794, a: 1}
+  m_Color: {r: 0.8509804, g: 0.35752833, b: 0.254902, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &3319550445258664968
+--- !u!61 &5104004542446354960
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &-7731018814590344016
+--- !u!50 &-2131296484623477782
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
