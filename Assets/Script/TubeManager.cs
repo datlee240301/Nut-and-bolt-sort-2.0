@@ -3,12 +3,17 @@
 public class TubeManager : MonoBehaviour {
     public static TubeManager Instance;
 
-    [HideInInspector] public GameObject liftedNut = null;
-    [HideInInspector] public TubeController sourceTube = null;
+    public GameObject liftedNut;
+    public TubeController sourceTube;
+
+    public bool IsAnimating { get; private set; }
 
     void Awake() {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        Instance = this;
+    }
+
+    public void SetAnimating(bool value) {
+        IsAnimating = value;
     }
 
     public bool HasLiftedNut() {
@@ -23,5 +28,6 @@ public class TubeManager : MonoBehaviour {
     public void ClearLiftedNut() {
         liftedNut = null;
         sourceTube = null;
+        IsAnimating = false; // ✅ Cho phép nhấn lại tube sau khi hoàn tất
     }
 }
