@@ -9,16 +9,15 @@ public class TubeController : MonoBehaviour {
     public Transform waitPoint;
 
     private List<GameObject> currentNuts = new List<GameObject>();
+    public List<GameObject> spawnedSpecialNuts = new List<GameObject>();
+
     private Vector3 originalScale;
 
     void Start() {
         SpawnNuts();
     }
-    private GameObject[] spawnedSpecialNuts; 
 
     void SpawnNuts() {
-        spawnedSpecialNuts = new GameObject[spawnPoints.Length]; 
-
         for (int i = 0; i < Mathf.Min(spawnPoints.Length, nutPrefabs.Length); i++) {
             GameObject nut = Instantiate(nutPrefabs[i], spawnPoints[i].position, Quaternion.identity);
             nut.transform.SetParent(transform);
@@ -26,17 +25,17 @@ public class TubeController : MonoBehaviour {
             currentNuts.Add(nut);
         }
 
+        // Spawn specialNuts (sẽ nằm lên trên nut)
         for (int i = 0; i < Mathf.Min(spawnPoints.Length, specialNutsPrefabs.Length); i++) {
-            if (specialNutsPrefabs[i] == null) continue;
-            GameObject specialNut = Instantiate(specialNutsPrefabs[i], spawnPoints[i].position, Quaternion.identity);
-            specialNut.transform.SetParent(transform);
-            specialNut.transform.localScale = originalScale;
-            spawnedSpecialNuts[i] = specialNut;
+            GameObject special = Instantiate(specialNutsPrefabs[i], spawnPoints[i].position, Quaternion.identity);
+            special.transform.SetParent(transform);
+            special.transform.localScale = originalScale;
+            spawnedSpecialNuts.Add(special);
         }
     }
 
     void OnMouseDown() {
-        if (TubeManager.Instance.IsAnimating) return; // 🚫 Đang animating, không cho nhấn
+        if (TubeManager.Instance.IsAnimating) return;
 
         if (TubeManager.Instance.HasLiftedNut()) {
             if (CanReceiveNut()) {
@@ -49,21 +48,25 @@ public class TubeController : MonoBehaviour {
         }
     }
 
-
     void TryLiftNut() {
         if (currentNuts.Count == 0) return;
 
+        // Nếu đủ 4 nut và tất cả giống tag thì không cho lift
         if (currentNuts.Count == 4) {
             string tagCheck = currentNuts[0].tag;
             bool allSame = currentNuts.TrueForAll(nut => nut.tag == tagCheck);
             if (allSame) return;
         }
+
         GameObject topNut = currentNuts[currentNuts.Count - 1];
         currentNuts.RemoveAt(currentNuts.Count - 1);
-        topNut.transform.DOMove(waitPoint.position, 0.3f).SetEase(Ease.OutQuad);
-        TubeManager.Instance.SetLiftedNut(topNut, this);
-    }
 
+        TubeManager.Instance.SetAnimating(true);
+        topNut.transform.DOMove(waitPoint.position, 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
+            TubeManager.Instance.SetLiftedNut(topNut, this);
+            TubeManager.Instance.SetAnimating(false);
+        });
+    }
 
     public void ReturnNutToOriginal() {
         if (!TubeManager.Instance.HasLiftedNut() || TubeManager.Instance.sourceTube != this) return;
@@ -72,7 +75,9 @@ public class TubeController : MonoBehaviour {
         int targetIndex = currentNuts.Count;
         if (targetIndex >= spawnPoints.Length) return;
 
+        TubeManager.Instance.SetAnimating(true);
         Vector3 returnPos = spawnPoints[targetIndex].position;
+
         nut.transform.DOMove(returnPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
             nut.transform.SetParent(transform);
             nut.transform.localScale = originalScale;
@@ -86,7 +91,7 @@ public class TubeController : MonoBehaviour {
     }
 
     void ReceiveNut() {
-        TubeManager.Instance.SetAnimating(true); // ✅ Bắt đầu animating
+        TubeManager.Instance.SetAnimating(true);
 
         GameObject nut = TubeManager.Instance.liftedNut;
         TubeController source = TubeManager.Instance.sourceTube;
@@ -100,23 +105,34 @@ public class TubeController : MonoBehaviour {
                 nut.transform.localScale = originalScale;
                 currentNuts.Add(nut);
 
+                // Ẩn specialNut phía trên nut vừa bị di chuyển từ tube cũ
                 int fromIndex = source.currentNuts.Count;
-                if (fromIndex > 0) {
+                if (fromIndex > 0 && fromIndex - 1 < source.spawnedSpecialNuts.Count) {
                     GameObject specialNutAbove = source.spawnedSpecialNuts[fromIndex - 1];
-                    if (specialNutAbove != null) {
+                    if (specialNutAbove != null)
                         specialNutAbove.SetActive(false);
-                    }
                 }
 
-                TubeManager.Instance.ClearLiftedNut(); // ✅ Cho phép nhấn lại tube
+                TubeManager.Instance.RegisterMove(nut, source, this);
+                TubeManager.Instance.ClearLiftedNut();
                 GameManager.Instance.CheckWinCondition();
             });
         });
     }
 
-
     public List<GameObject> GetCurrentNuts() {
         return currentNuts;
     }
 
+    public void RemoveNut(GameObject nut) {
+        currentNuts.Remove(nut);
+    }
+
+    public void AddNut(GameObject nut) {
+        currentNuts.Add(nut);
+    }
+
+    public Vector3 GetOriginalScale() {
+        return originalScale;
+    }
 }
