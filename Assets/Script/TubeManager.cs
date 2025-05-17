@@ -1,5 +1,5 @@
-﻿using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
+using DG.Tweening;
 
 public class TubeManager : MonoBehaviour {
     public static TubeManager Instance;
@@ -7,19 +7,21 @@ public class TubeManager : MonoBehaviour {
     public GameObject liftedNut;
     public TubeController sourceTube;
 
+    public GameObject tubePrefab;
+    public Transform tubeSpawnPoint;
+
+    public TubeController tubeSpawned;
+
     public bool IsAnimating { get; private set; }
 
-    // ====== Thông tin để Undo ======
+    // ====== Undo tracking ======
     private GameObject lastMovedNut;
     private TubeController lastSourceTube;
     private TubeController lastTargetTube;
 
     void Awake() {
-        Instance = this;
-    }
-
-    public void SetAnimating(bool value) {
-        IsAnimating = value;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     public bool HasLiftedNut() => liftedNut != null;
@@ -35,14 +37,17 @@ public class TubeManager : MonoBehaviour {
         IsAnimating = false;
     }
 
-    // ====== Ghi lại thao tác để Undo ======
+    public void SetAnimating(bool value) {
+        IsAnimating = value;
+    }
+
+    // ====== Undo Support ======
     public void RegisterMove(GameObject nut, TubeController fromTube, TubeController toTube) {
         lastMovedNut = nut;
         lastSourceTube = fromTube;
         lastTargetTube = toTube;
     }
 
-    // ====== Hàm Undo để gắn vào button ======
     public void UndoLastMove() {
         if (IsAnimating || lastMovedNut == null || lastTargetTube == null || lastSourceTube == null) return;
 
@@ -64,5 +69,24 @@ public class TubeManager : MonoBehaviour {
             lastSourceTube = null;
             lastTargetTube = null;
         });
+    }
+
+    // ====== Tube Spawn + Reveal Support ======
+    public void SpawnNewTube() {
+        if (tubeSpawned != null) {
+            Debug.LogWarning("Tube đã được spawn.");
+            return;
+        }
+
+        GameObject newTube = Instantiate(tubePrefab, tubeSpawnPoint.position, Quaternion.identity);
+        tubeSpawned = newTube.GetComponent<TubeController>();
+    }
+
+    public void RevealNextSpawnPointForSpawnedTube() {
+        if (tubeSpawned != null) {
+            tubeSpawned.RevealNextSpawnPoint();
+        } else {
+            Debug.LogWarning("Chưa có tube nào được spawn.");
+        }
     }
 }

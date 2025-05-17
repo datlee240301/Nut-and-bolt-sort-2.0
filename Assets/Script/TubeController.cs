@@ -13,9 +13,17 @@ public class TubeController : MonoBehaviour {
 
     private Vector3 originalScale;
 
+    private int activeSpawnCount = 0;
+
     void Start() {
+        // Disable tất cả spawnPoints ban đầu
+        foreach (Transform spawnPoint in spawnPoints) {
+            spawnPoint.gameObject.SetActive(false);
+        }
+
         SpawnNuts();
     }
+
 
     void SpawnNuts() {
         for (int i = 0; i < Mathf.Min(spawnPoints.Length, nutPrefabs.Length); i++) {
@@ -102,10 +110,15 @@ public class TubeController : MonoBehaviour {
 
             nut.transform.DOMove(targetPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
                 nut.transform.SetParent(transform);
+
+                // Nếu originalScale chưa được gán, lấy scale từ nut hiện tại
+                if (originalScale == Vector3.zero)
+                    originalScale = nut.transform.localScale;
+
                 nut.transform.localScale = originalScale;
                 currentNuts.Add(nut);
 
-                // Ẩn specialNut phía trên nut vừa bị di chuyển từ tube cũ
+                // Ẩn specialNut ở tube cũ nếu có
                 int fromIndex = source.currentNuts.Count;
                 if (fromIndex > 0 && fromIndex - 1 < source.spawnedSpecialNuts.Count) {
                     GameObject specialNutAbove = source.spawnedSpecialNuts[fromIndex - 1];
@@ -120,6 +133,7 @@ public class TubeController : MonoBehaviour {
         });
     }
 
+
     public List<GameObject> GetCurrentNuts() {
         return currentNuts;
     }
@@ -129,10 +143,24 @@ public class TubeController : MonoBehaviour {
     }
 
     public void AddNut(GameObject nut) {
+        if (originalScale == Vector3.zero) {
+            originalScale = nut.transform.localScale;
+        }
+
         currentNuts.Add(nut);
     }
+
+
 
     public Vector3 GetOriginalScale() {
         return originalScale;
     }
+    public void RevealNextSpawnPoint() {
+        if (activeSpawnCount >= spawnPoints.Length) return;
+
+        Transform pointToEnable = spawnPoints[activeSpawnCount];
+        pointToEnable.gameObject.SetActive(true);
+        activeSpawnCount++;
+    }
+
 }
