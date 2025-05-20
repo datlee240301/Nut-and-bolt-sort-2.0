@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: -829671037082959611}
   m_Layer: 0
   m_Name: Tube
-  m_TagString: Untagged
+  m_TagString: Tube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -344,4 +344,6 @@ MonoBehaviour:
   - {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
   - {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
   - {fileID: 3758515395724152035, guid: 678675e5e18704140b5b0c7a599f4de1, type: 3}
+  specialNutsPrefabs: []
   waitPoint: {fileID: 7836195755103579324}
+  spawnedSpecialNuts: []

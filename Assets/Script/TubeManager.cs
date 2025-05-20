@@ -4,14 +4,18 @@ using DG.Tweening;
 public class TubeManager : MonoBehaviour {
     public static TubeManager Instance;
 
+    [Header("Prefab")]
+    public GameObject tubePrefab;
+
+    private Transform tubeGridLayoutParent; 
+
+    [Header("Tube Tracking")]
+    public TubeController tubeSpawned;
+    private int pressButtonCount = 0;
+
+    [Header("Nut Move State")]
     public GameObject liftedNut;
     public TubeController sourceTube;
-
-    public GameObject tubePrefab;
-    public Transform tubeSpawnPoint;
-
-    public TubeController tubeSpawned;
-
     public bool IsAnimating { get; private set; }
 
     // ====== Undo tracking ======
@@ -22,6 +26,13 @@ public class TubeManager : MonoBehaviour {
     void Awake() {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        GameObject found = GameObject.Find("TubeGridLayout");
+        if (found != null) {
+            tubeGridLayoutParent = found.transform;
+        } else {
+            Debug.LogError("Không tìm thấy GameObject tên 'TubeGridLayout' trong scene!");
+        }
     }
 
     public bool HasLiftedNut() => liftedNut != null;
@@ -50,7 +61,6 @@ public class TubeManager : MonoBehaviour {
 
     public void UndoLastMove() {
         if (IsAnimating || lastMovedNut == null || lastTargetTube == null || lastSourceTube == null) return;
-
         if (!lastTargetTube.GetCurrentNuts().Contains(lastMovedNut)) return;
 
         SetAnimating(true);
@@ -73,13 +83,29 @@ public class TubeManager : MonoBehaviour {
 
     // ====== Tube Spawn + Reveal Support ======
     public void SpawnNewTube() {
-        if (tubeSpawned != null) {
-            Debug.LogWarning("Tube đã được spawn.");
+        pressButtonCount++;
+
+        if (pressButtonCount == 1) {
+            if (tubeSpawned != null) {
+                Debug.LogWarning("Tube đã được spawn.");
+                return;
+            }
+
+            if (tubeGridLayoutParent == null) {
+                Debug.LogError("Không tìm thấy TubeGridLayout.");
+                return;
+            }
+
+            GameObject newTube = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, tubeGridLayoutParent);
+            tubeSpawned = newTube.GetComponent<TubeController>();
             return;
         }
 
-        GameObject newTube = Instantiate(tubePrefab, tubeSpawnPoint.position, Quaternion.identity);
-        tubeSpawned = newTube.GetComponent<TubeController>();
+        var spawnManager = FindObjectOfType<SpawnPosOfNewTubeManager>();
+        int indexToActivate = pressButtonCount - 2;
+        if (spawnManager != null && indexToActivate < spawnManager.spawnPos.Length) {
+            spawnManager.spawnPos[indexToActivate].SetActive(true);
+        }
     }
 
     public void RevealNextSpawnPointForSpawnedTube() {

@@ -46,7 +46,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &440111534716603051
 Transform:
   m_ObjectHideFlags: 0
@@ -108,7 +108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3612232028320628739
 Transform:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7622076682483743264
 Transform:
   m_ObjectHideFlags: 0
@@ -198,9 +198,10 @@ GameObject:
   - component: {fileID: 4894033384067858141}
   - component: {fileID: 3250835754412219412}
   - component: {fileID: -829671037082959611}
+  - component: {fileID: 3692766644590859492}
   m_Layer: 0
   m_Name: TubeToSpawn
-  m_TagString: Untagged
+  m_TagString: Tube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -344,3 +345,19 @@ MonoBehaviour:
   specialNutsPrefabs: []
   waitPoint: {fileID: 7836195755103579324}
   spawnedSpecialNuts: []
+--- !u!114 &3692766644590859492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8773738718886431661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab402c34a2b475a488de6c0a40487a8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPos:
+  - {fileID: 5846461323781822773}
+  - {fileID: 3819061740818631687}
+  - {fileID: 4399082200494424082}

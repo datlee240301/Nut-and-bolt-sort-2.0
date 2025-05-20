@@ -17,9 +17,9 @@ public class TubeController : MonoBehaviour {
 
     void Start() {
         // Disable tất cả spawnPoints ban đầu
-        foreach (Transform spawnPoint in spawnPoints) {
-            spawnPoint.gameObject.SetActive(false);
-        }
+        //foreach (Transform spawnPoint in spawnPoints) {
+        //    spawnPoint.gameObject.SetActive(false);
+        //}
 
         SpawnNuts();
     }
@@ -95,8 +95,9 @@ public class TubeController : MonoBehaviour {
     }
 
     bool CanReceiveNut() {
-        return currentNuts.Count < spawnPoints.Length;
+        return currentNuts.Count < spawnPoints.Length && spawnPoints[currentNuts.Count].gameObject.activeSelf;
     }
+
 
     void ReceiveNut() {
         TubeManager.Instance.SetAnimating(true);
@@ -111,14 +112,12 @@ public class TubeController : MonoBehaviour {
             nut.transform.DOMove(targetPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
                 nut.transform.SetParent(transform);
 
-                // Nếu originalScale chưa được gán, lấy scale từ nut hiện tại
                 if (originalScale == Vector3.zero)
                     originalScale = nut.transform.localScale;
 
                 nut.transform.localScale = originalScale;
                 currentNuts.Add(nut);
 
-                // Ẩn specialNut ở tube cũ nếu có
                 int fromIndex = source.currentNuts.Count;
                 if (fromIndex > 0 && fromIndex - 1 < source.spawnedSpecialNuts.Count) {
                     GameObject specialNutAbove = source.spawnedSpecialNuts[fromIndex - 1];
