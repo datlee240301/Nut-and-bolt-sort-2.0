@@ -208,7 +208,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -534, y: -648}
+  m_AnchoredPosition: {x: -345, y: -648}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &204880391
@@ -423,7 +423,7 @@ PrefabInstance:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 3641729c3859b6848b06f1efe346c388, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
@@ -613,24 +613,44 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 764417df66789ff40833980cf88c6eb8, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+    - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: specialNutsPrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: specialNutsPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 3758515395724152035, guid: 764417df66789ff40833980cf88c6eb8, type: 3}
+    - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: specialNutsPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 3758515395724152035, guid: 764417df66789ff40833980cf88c6eb8, type: 3}
+    - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: specialNutsPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 3758515395724152035, guid: 764417df66789ff40833980cf88c6eb8, type: 3}
+    - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: specialNutsPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 3758515395724152035, guid: 764417df66789ff40833980cf88c6eb8, type: 3}
     - target: {fileID: 840140748285535695, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.5
@@ -695,7 +715,7 @@ PrefabInstance:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 3641729c3859b6848b06f1efe346c388, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
@@ -747,6 +767,14 @@ PrefabInstance:
     - target: {fileID: 840140748285535695, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3250835754412219412, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: m_Size.y
+      value: 4.467869
+      objectReference: {fileID: 0}
+    - target: {fileID: 3250835754412219412, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
+      propertyPath: m_Offset.y
+      value: 1.2112517
       objectReference: {fileID: 0}
     - target: {fileID: 8773738718886431661, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: m_Name
@@ -1069,7 +1097,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -292, y: -648}
+  m_AnchoredPosition: {x: -103.000015, y: -648}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1378055902
