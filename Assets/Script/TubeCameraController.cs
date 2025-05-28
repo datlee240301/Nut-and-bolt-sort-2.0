@@ -6,6 +6,10 @@ public class TubeCameraController : MonoBehaviour {
     public float screenPadding = 0.1f;
     public float minDistance = 10f;
     public float maxDistance = 60f;
+
+    [Header("Manual Y Offset")]
+    public float yOffset = 0f; // <-- Thêm dòng này để điều chỉnh độ cao Y
+
     private Camera cam;
 
     void Awake() => cam = GetComponent<Camera>();
@@ -20,13 +24,15 @@ public class TubeCameraController : MonoBehaviour {
         Bounds bounds = new Bounds(tubes[0].transform.position, Vector3.zero);
         for (int i = 1; i < tubes.Length; i++)
             bounds.Encapsulate(tubes[i].transform.position);
+
         Vector3 centre = bounds.center;
+        centre.y += yOffset; // <-- Áp dụng yOffset tại đây
+
         if (cam.orthographic) {
-            /* ---- ORTHOGRAPHIC ---- */
             float sizeX = bounds.extents.x / cam.aspect;
             float sizeY = bounds.extents.y;
             float targetSize = Mathf.Max(sizeX, sizeY);
-            targetSize *= (1f + screenPadding);         // padding
+            targetSize *= (1f + screenPadding);
 
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize,
                                               targetSize,
@@ -35,7 +41,6 @@ public class TubeCameraController : MonoBehaviour {
                                              centre.y,
                                              transform.position.z);
         } else {
-            /* ---- PERSPECTIVE ---- */
             float frustumHeight = Mathf.Max(bounds.size.y,
                                             bounds.size.x / cam.aspect);
             frustumHeight *= (1f + screenPadding);
