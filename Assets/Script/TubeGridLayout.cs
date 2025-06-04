@@ -10,7 +10,6 @@ public class TubeGridLayout : MonoBehaviour {
     void Update() {
         UpdateTubePositions();
     }
-
     void OnTransformChildrenChanged() {
         UpdateTubePositions();
     }

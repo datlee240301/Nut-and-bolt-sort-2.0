@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxTubesPerRow: 4
   spacingX: 2.5
-  spacingY: 5.92
+  spacingY: 7.38
 --- !u!1001 &3914006967883156121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92,24 +92,24 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 678675e5e18704140b5b0c7a599f4de1, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: 840140748285535695, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5
@@ -178,24 +178,24 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 3641729c3859b6848b06f1efe346c388, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 678675e5e18704140b5b0c7a599f4de1, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: 840140748285535695, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5
@@ -264,7 +264,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.size
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
