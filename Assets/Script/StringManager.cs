@@ -1,5 +1,5 @@
-
-internal class StringManager {
+internal class StringManager
+{
     internal static string ticketNumber = "TicketNumber";
     internal static string undoNumber = "undoNumber";
     internal static string addTubeNumber = "addTubeNumber";
@@ -12,4 +12,19 @@ internal class StringManager {
     internal static string hasBuyTheme4 = "HasBuyTheme4";
     internal static string hasBuyTheme5 = "HasBuyTheme5";
     internal static string hasBuyTheme6 = "HasBuyTheme6";
+    internal static string useTheme1 = "UseTheme1";
+    internal static string useTheme2 = "UseTheme2";
+    internal static string useTheme3 = "UseTheme3";
+    internal static string useTheme4 = "UseTheme4";
+    internal static string useTheme5 = "UseTheme5";
+    internal static string useTheme6 = "UseTheme6";
+    internal static string currentLevelId = "CurrentLevelId";
+    internal static string pressPlayButton = "PressPlayButton";
+    internal static string currentLevelIdLevelButton = "CurrentLevelIdLevelButton";
+    internal static string pressLevelButton = "PressLevelButton";
+
+    public static string GetThemeKey(int themeId)
+    {
+        return $"HasBuyTheme{themeId}";
+    }
 }

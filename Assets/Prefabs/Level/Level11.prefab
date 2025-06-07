@@ -101,22 +101,22 @@ PrefabInstance:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1e1d668cc0dddc44ab0840b057704e4f, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1e1d668cc0dddc44ab0840b057704e4f, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.data[0]
@@ -207,22 +207,22 @@ PrefabInstance:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.data[0]
@@ -313,22 +313,22 @@ PrefabInstance:
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 5198ee60356ca2d46b8fd9b9bdb899c9, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: 811636ecdd8a43e4091c777403d3c19b, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: nutPrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 3758515395724152035, guid: 1f56a979231b0124f930fe9764bf3c62, type: 3}
+      objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.data[0]
@@ -434,7 +434,7 @@ PrefabInstance:
       objectReference: {fileID: 3758515395724152035, guid: ef738b4b1bd8ad04a82ca902899981ae, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.data[0]
@@ -716,7 +716,7 @@ PrefabInstance:
       objectReference: {fileID: 3758515395724152035, guid: 1e1d668cc0dddc44ab0840b057704e4f, type: 3}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -829671037082959611, guid: fa48ad47b99f5f64d82b72374723c393, type: 3}
       propertyPath: specialNutsPrefabs.Array.data[0]

@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
@@ -8,7 +9,7 @@ public class UiManager : MonoBehaviour
     [Header("----------FadeZone-----------")] [SerializeField]
     Image fadeOverlay;
 
-    [Header("----------TextZone-----------")] [SerializeField]
+    [Header("----------BoosterZone-----------")] [SerializeField]
     TextMeshProUGUI ticketNumberText;
 
     int ticketNumber;
@@ -16,6 +17,7 @@ public class UiManager : MonoBehaviour
     int undoNumber;
     [SerializeField] TextMeshProUGUI addTubeNumberText;
     int addTubeNumber;
+
 
     [Header("----------SettingButtonZone-----------")] [SerializeField]
     Image musicButton;
@@ -31,22 +33,45 @@ public class UiManager : MonoBehaviour
     int musicId;
     int soundId;
     int vibrateId;
+    [SerializeField] GameObject menuPanel;
 
     [Header("----------BuyThemeButtonZone-----------")] [SerializeField]
     GameObject[] buyThemeButtons;
+
     [SerializeField] GameObject[] greyPanel;
-    [Header("----------ObjectToHide-----------")] [SerializeField] 
+
+    [Header("----------ObjectToHide-----------")] [SerializeField]
     GameObject[] objectsToHide;
+
+    [SerializeField] UiPanelDotween noticePanel;
+    [SerializeField] TextMeshProUGUI noticeText;
+
+    [Header("----------LevelText-----------")] [SerializeField]
+    TextMeshProUGUI levelText;
+    [SerializeField] GameObject aura;
+    [SerializeField] float auraRotateSpeed = 100f;
+
     // Start is called before the first frame update
     void Start()
     {
         SetTicketNumber();
         SetSettingButton();
+        if (SceneManager.GetActiveScene().name == "Main")
+        {
+            if (PlayerPrefs.GetInt(StringManager.pressLevelButton) != 0)
+                levelText.text = "Level " + PlayerPrefs.GetInt(StringManager.currentLevelIdLevelButton).ToString();
+            else
+                levelText.text = "Level " + PlayerPrefs.GetInt(StringManager.currentLevelId).ToString();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (aura != null)
+        {
+            aura.transform.Rotate(0f, 0f, auraRotateSpeed * Time.deltaTime);
+        }
     }
 
     /// <summary>
@@ -82,6 +107,14 @@ public class UiManager : MonoBehaviour
             undoNumberText.text = undoNumber.ToString();
     }
 
+    public void PlusUndoNumber(int number)
+    {
+        undoNumber += number;
+        PlayerPrefs.SetInt(StringManager.undoNumber, undoNumber);
+        if (undoNumberText != null)
+            undoNumberText.text = undoNumber.ToString();
+    }
+
     public void MinusAddTubeNumber(int number)
     {
         addTubeNumber -= number;
@@ -90,6 +123,22 @@ public class UiManager : MonoBehaviour
         PlayerPrefs.SetInt(StringManager.addTubeNumber, addTubeNumber);
         if (addTubeNumberText != null)
             addTubeNumberText.text = addTubeNumber.ToString();
+    }
+
+    public void PlusAddTubeNumber(int number)
+    {
+        addTubeNumber += number;
+        PlayerPrefs.SetInt(StringManager.addTubeNumber, addTubeNumber);
+        if (addTubeNumberText != null)
+            addTubeNumberText.text = addTubeNumber.ToString();
+    }
+
+    public void PlusticketNumber(int number)
+    {
+        ticketNumber += number;
+        PlayerPrefs.SetInt(StringManager.ticketNumber, ticketNumber);
+        if (ticketNumberText != null)
+            ticketNumberText.text = ticketNumber.ToString();
     }
 
     void SetSettingButton()
@@ -116,23 +165,57 @@ public class UiManager : MonoBehaviour
         }
     }
 
+    public void ShowNoticePanel()
+    {
+        noticePanel.PanelFadeIn();
+        noticeText.text = "You have to complete level " + PlayerPrefs.GetInt(StringManager.currentLevelId).ToString();
+    }
+
     /// <summary>
     /// Button zone
     ///<summary>
-    public void HideObjects()
+    // public void HideObjects()
+    // {
+    //     foreach (GameObject obj in objectsToHide)
+    //     {
+    //         obj.SetActive(false);
+    //     }
+    // }
+    // public void ShowObjects()
+    // {
+    //     foreach (GameObject obj in objectsToHide)
+    //     {
+    //         obj.SetActive(true);
+    //     }
+    // }
+    public void NextLevelButton()
     {
-        foreach (GameObject obj in objectsToHide)
+        if (PlayerPrefs.GetInt(StringManager.pressLevelButton) == 1)
         {
-            obj.SetActive(false);
+            PlayerPrefs.SetInt(StringManager.currentLevelIdLevelButton,
+                PlayerPrefs.GetInt(StringManager.currentLevelIdLevelButton) + 1);
+            LoadSceneButton("Main");
+        }
+        else
+        {
+            PlayerPrefs.SetInt(StringManager.currentLevelId,
+                PlayerPrefs.GetInt(StringManager.currentLevelId) + 1);
+            LoadSceneButton("Main");
         }
     }
-    public void ShowObjects()
+
+    public void MenuButton()
     {
-        foreach (GameObject obj in objectsToHide)
+        if (menuPanel.activeSelf)
         {
-            obj.SetActive(true);
+            menuPanel.SetActive(false);
+        }
+        else
+        {
+            menuPanel.SetActive(true);
         }
     }
+
     public void BuyTicket(int amount)
     {
         ticketNumber += amount;
@@ -220,37 +303,37 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void SetThemeIdButton(int themeId)
-    {
-        if (themeId == 1)
-        {
-            PlayerPrefs.SetInt(StringManager.hasBuyTheme1,1);
-            buyThemeButtons[0].SetActive(false);
-        }
-        else if (themeId == 2)
-        {
-            PlayerPrefs.SetInt(StringManager.hasBuyTheme2,1);
-            buyThemeButtons[1].SetActive(false);
-        }
-        else if (themeId == 3)
-        {
-            PlayerPrefs.SetInt(StringManager.hasBuyTheme3,1);
-            buyThemeButtons[2].SetActive(false);
-        }
-        else if (themeId == 4)
-        {
-            PlayerPrefs.SetInt(StringManager.hasBuyTheme4,1);
-            buyThemeButtons[3].SetActive(false);
-        }
-        else if (themeId == 5)
-        {
-            PlayerPrefs.SetInt(StringManager.hasBuyTheme5,1);
-            buyThemeButtons[4].SetActive(false);
-        }
-        else if (themeId == 6)
-        {
-            PlayerPrefs.SetInt(StringManager.hasBuyTheme6,1);
-            buyThemeButtons[5].SetActive(false);
-        }
-    }
+    // public void SetThemeIdButton(int themeId)
+    // {
+    //     if (themeId == 1)
+    //     {
+    //         PlayerPrefs.SetInt(StringManager.hasBuyTheme1,1);
+    //         buyThemeButtons[0].SetActive(false);
+    //     }
+    //     else if (themeId == 2)
+    //     {
+    //         PlayerPrefs.SetInt(StringManager.hasBuyTheme2,1);
+    //         buyThemeButtons[1].SetActive(false);
+    //     }
+    //     else if (themeId == 3)
+    //     {
+    //         PlayerPrefs.SetInt(StringManager.hasBuyTheme3,1);
+    //         buyThemeButtons[2].SetActive(false);
+    //     }
+    //     else if (themeId == 4)
+    //     {
+    //         PlayerPrefs.SetInt(StringManager.hasBuyTheme4,1);
+    //         buyThemeButtons[3].SetActive(false);
+    //     }
+    //     else if (themeId == 5)
+    //     {
+    //         PlayerPrefs.SetInt(StringManager.hasBuyTheme5,1);
+    //         buyThemeButtons[4].SetActive(false);
+    //     }
+    //     else if (themeId == 6)
+    //     {
+    //         PlayerPrefs.SetInt(StringManager.hasBuyTheme6,1);
+    //         buyThemeButtons[5].SetActive(false);
+    //     }
+    // }
 }

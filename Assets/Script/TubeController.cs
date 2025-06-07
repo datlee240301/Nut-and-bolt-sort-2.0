@@ -19,6 +19,8 @@ public class TubeController : MonoBehaviour
 
     private int activeSpawnCount = 0;
     private bool isPointerOverUI;
+    [SerializeField] GameObject collisionEffectPrefab;
+    [SerializeField] GameObject fullColumnEffectPrefab;
 
     void Start()
     {
@@ -164,6 +166,23 @@ public class TubeController : MonoBehaviour
 
                 nut.transform.localScale = originalScale;
                 currentNuts.Add(nut);
+
+                // Spawn collision effect at the target position
+                if (collisionEffectPrefab != null)
+                {
+                    Instantiate(collisionEffectPrefab, targetPos, Quaternion.identity);
+                }
+
+                // Check for 4 nuts with the same tag and spawn fullColumnEffect
+                if (currentNuts.Count == 4)
+                {
+                    string tagCheck = currentNuts[0].tag;
+                    bool allSame = currentNuts.TrueForAll(n => n.tag == tagCheck);
+                    if (allSame && fullColumnEffectPrefab != null)
+                    {
+                        Instantiate(fullColumnEffectPrefab, waitPoint.position, Quaternion.identity);
+                    }
+                }
 
                 int fromIndex = source.currentNuts.Count;
                 if (fromIndex > 0 && fromIndex - 1 < source.spawnedSpecialNuts.Count)
