@@ -1080,6 +1080,7 @@ MonoBehaviour:
   levelText: {fileID: 1515002891}
   aura: {fileID: 1304450015}
   auraRotateSpeed: 100
+  maxLevelPanel: {fileID: 0}
 --- !u!1 &233873721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2743,8 +2744,8 @@ Transform:
   m_GameObject: {fileID: 403884682}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1, y: -1.48, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.2, y: -0.0661, z: 0}
+  m_LocalScale: {x: 3.1602929, y: 2.4138758, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3643,7 +3644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tubeTag: Tube
-  screenPadding: 0.7
+  screenPadding: 0.8
   minDistance: 10
   maxDistance: 60
   yOffset: 0.67
@@ -7901,6 +7902,42 @@ MonoBehaviour:
   - {fileID: 702733921642461327, guid: 4691e2be2b1f36847b0c0818615a5df1, type: 3}
   - {fileID: 702733921642461327, guid: 7e18d8bbf53c9e844ac5c64d0d6e37e7, type: 3}
   - {fileID: 8411138506583435210, guid: 305b5113d2a563a42bfaab6574837352, type: 3}
+  - {fileID: 702733921642461327, guid: 0a0413201a72efc4f843afdc4893f277, type: 3}
+  - {fileID: 8889129039050591748, guid: 80673cd0e69271e47affc27d978b88b7, type: 3}
+  - {fileID: 702733921642461327, guid: b520922c991ec6a49901fadfaeb504c1, type: 3}
+  - {fileID: 702733921642461327, guid: bc89c210e69991546bf7668d933c0282, type: 3}
+  - {fileID: 8889129039050591748, guid: 62cd7de544ce82b42a0d378ddbde9a62, type: 3}
+  - {fileID: 832538945820731603, guid: 1fa0c3c02cc6e3246b96fed27c872b6b, type: 3}
+  - {fileID: 702733921642461327, guid: ec6d1a04b9eae4d4dbe43096dcebb97f, type: 3}
+  - {fileID: 8889129039050591748, guid: eedf7f221f8f7e34394e41eb5a13bbde, type: 3}
+  - {fileID: 8411138506583435210, guid: bd1e338d91d00024d99979c6a98485ce, type: 3}
+  - {fileID: 702733921642461327, guid: 3a937a2a5d03758428c53afe79440856, type: 3}
+  - {fileID: 7926075404645642690, guid: 268439b89c8ac7148aa5096dddce3e1a, type: 3}
+  - {fileID: 702733921642461327, guid: c139af67725c4d948ac966c26533daed, type: 3}
+  - {fileID: 7926075404645642690, guid: f06794629a5b27848868a6cb52bd2773, type: 3}
+  - {fileID: 8889129039050591748, guid: 9729e0a1fb84b134ca4d14cfab13a19c, type: 3}
+  - {fileID: 702733921642461327, guid: 7e6d22f4a187d0c4c936f6b0ab925898, type: 3}
+  - {fileID: 8889129039050591748, guid: b98505102aabc9f4e9b6ae61ed6fac96, type: 3}
+  - {fileID: 8889129039050591748, guid: 6a26ff930bddc4649a76d91cae52d032, type: 3}
+  - {fileID: 702733921642461327, guid: fc3cf5f538f9fff4e870129f024b542a, type: 3}
+  - {fileID: 8889129039050591748, guid: a5a383339b5a4bf43801af7239433c07, type: 3}
+  - {fileID: 8889129039050591748, guid: ab3a9df95ce3d90448675e299d147068, type: 3}
+  - {fileID: 8889129039050591748, guid: 3fa7f9810b5236b4286292887361ae38, type: 3}
+  - {fileID: 8889129039050591748, guid: 6207c9568fc7fd64ba3447c9cffa31d0, type: 3}
+  - {fileID: 8889129039050591748, guid: 835cc3b7be7457447b59e62384fe6143, type: 3}
+  - {fileID: 702733921642461327, guid: 2b9bb9b8c77b1e84d80036c78aba553b, type: 3}
+  - {fileID: 8889129039050591748, guid: 54e5478e3ee712e4198bd9cec4005403, type: 3}
+  - {fileID: 8889129039050591748, guid: 13102c41feef8c14a8bbe6c38394c853, type: 3}
+  - {fileID: 702733921642461327, guid: 740dd6e7ac64d2f4994e7aa37c33ca6c, type: 3}
+  - {fileID: 8889129039050591748, guid: cafdc5a5559afab48be040b94f269041, type: 3}
+  - {fileID: 8889129039050591748, guid: d4ce49a7645b2e044baf7904bffc641e, type: 3}
+  - {fileID: 7926075404645642690, guid: 26d8e3936602ab2428404e4d241a6a1e, type: 3}
+  - {fileID: 8889129039050591748, guid: 596800d748e7b1945ae54d1ccb7a257c, type: 3}
+  - {fileID: 8889129039050591748, guid: 03f06aa687192e742a3292e3433944ee, type: 3}
+  - {fileID: 8889129039050591748, guid: dcd191006fc5db342b7171a3ebdb33db, type: 3}
+  - {fileID: 8889129039050591748, guid: d28112d8adc5a9749940971341981260, type: 3}
+  - {fileID: 8889129039050591748, guid: 06df4872e696aa14f9420efab1fe3fa9, type: 3}
+  - {fileID: 8889129039050591748, guid: cee577c56dfbd6c4a8e11a25576c23f8, type: 3}
 --- !u!4 &1455893555
 Transform:
   m_ObjectHideFlags: 0

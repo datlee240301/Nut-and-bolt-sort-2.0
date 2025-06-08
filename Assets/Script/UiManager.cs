@@ -48,8 +48,10 @@ public class UiManager : MonoBehaviour
 
     [Header("----------LevelText-----------")] [SerializeField]
     TextMeshProUGUI levelText;
+
     [SerializeField] GameObject aura;
     [SerializeField] float auraRotateSpeed = 100f;
+    [SerializeField] UiPanelDotween maxLevelPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -194,13 +196,19 @@ public class UiManager : MonoBehaviour
         {
             PlayerPrefs.SetInt(StringManager.currentLevelIdLevelButton,
                 PlayerPrefs.GetInt(StringManager.currentLevelIdLevelButton) + 1);
-            LoadSceneButton("Main");
+            if (PlayerPrefs.GetInt(StringManager.currentLevelIdLevelButton) > 50)
+                LoadSceneButton("Menu");
+            else
+                LoadSceneButton("Main");
         }
         else
         {
             PlayerPrefs.SetInt(StringManager.currentLevelId,
                 PlayerPrefs.GetInt(StringManager.currentLevelId) + 1);
-            LoadSceneButton("Main");
+            if (PlayerPrefs.GetInt(StringManager.currentLevelId) > 50)
+                LoadSceneButton("Menu");
+            else
+                LoadSceneButton("Main");
         }
     }
 
@@ -268,7 +276,15 @@ public class UiManager : MonoBehaviour
 
     public void LoadSceneButton(string sceneName)
     {
-        StartCoroutine(FadeAndLoadScene(sceneName));
+        if (SceneManager.GetActiveScene().name == "Menu")
+        {
+            if (PlayerPrefs.GetInt(StringManager.currentLevelId) > 50)
+                maxLevelPanel.PanelFadeIn();
+            else
+                StartCoroutine(FadeAndLoadScene(sceneName));
+        }
+        else
+            StartCoroutine(FadeAndLoadScene(sceneName));
     }
 
     IEnumerator FadeAndLoadScene(string sceneName)
