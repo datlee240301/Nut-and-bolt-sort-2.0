@@ -14,7 +14,16 @@ public class TubeCameraController : MonoBehaviour
 
     void Awake() => cam = GetComponent<Camera>();
 
-    void Update() => FrameAllTubes();
+    public bool isShaking = false;
+
+    void Update()
+    {
+        if (!isShaking)
+        {
+            FrameAllTubes();
+        }
+    }
+
 
     /* ---------- Core ---------- */
     void FrameAllTubes()
