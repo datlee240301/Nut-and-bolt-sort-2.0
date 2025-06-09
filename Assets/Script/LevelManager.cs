@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject[] levelPrefabs;
     int currentLevel;
     UiManager uiManager;
+    LevelButton[] levelButtons;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         if (SceneManager.GetActiveScene().name == "Main")
         {
@@ -24,9 +25,18 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt(StringManager.pressLevelButton, 0);
             currentLevel = PlayerPrefs.GetInt(StringManager.currentLevelId, 1);
             PlayerPrefs.SetInt(StringManager.currentLevelId, currentLevel);
-            Debug.Log(currentLevel);
+            // levelButtons = FindObjectsOfType<LevelButton>();
+            // foreach (LevelButton button in levelButtons)
+            // {
+            //     button.SetButtonImage();
+            // }
+            // Debug.Log(currentLevel);
         }
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
         uiManager = FindObjectOfType<UiManager>();
     }
 

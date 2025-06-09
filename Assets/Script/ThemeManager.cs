@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ThemeManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ThemeManager : MonoBehaviour
     [SerializeField] GameObject[] greenCheckIcons;
     [SerializeField] TextMeshProUGUI ticketNumberText;
     [SerializeField] Sprite[] themePrefabs;
-    [SerializeField] SpriteRenderer backgroundSpriteRenderer;
+    [SerializeField] Image backgroundSpriteRenderer;
 
     void Start()
     {

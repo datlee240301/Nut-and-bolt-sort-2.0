@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
@@ -37,7 +38,17 @@ public class TubeManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI coinNumberText;
     [SerializeField] UiPanelDotween noticePanel;
     [SerializeField] UiPanelDotween limitSpawnTubePanel;
+    private Stack<MoveInfo> moveStack = new Stack<MoveInfo>();
 
+    // Replace lastMovedNut, lastSourceTube, lastTargetTube with MoveInfo
+    
+
+    public class MoveInfo
+    {
+        public GameObject nut;
+        public TubeController fromTube;
+        public TubeController toTube;
+    }
 
     void Awake()
     {
@@ -107,42 +118,43 @@ public class TubeManager : MonoBehaviour
     // ====== Undo Support ======
     public void RegisterMove(GameObject nut, TubeController fromTube, TubeController toTube)
     {
-        lastMovedNut = nut;
-        lastSourceTube = fromTube;
-        lastTargetTube = toTube;
+        moveStack.Push(new MoveInfo
+        {
+            nut = nut,
+            fromTube = fromTube,
+            toTube = toTube
+        });
     }
 
     public void UndoLastMove()
     {
         if (PlayerPrefs.GetInt(StringManager.undoNumber) > 0 && !undoFeePanel.activeSelf)
         {
-            if (IsAnimating || lastMovedNut == null || lastTargetTube == null || lastSourceTube == null) return;
-            if (!lastTargetTube.GetCurrentNuts().Contains(lastMovedNut)) return;
+            if (IsAnimating || moveStack.Count == 0) return;
+
+            MoveInfo move = moveStack.Pop();
+            if (!move.toTube.GetCurrentNuts().Contains(move.nut)) return;
 
             SetAnimating(true);
-            lastTargetTube.RemoveNut(lastMovedNut);
+            move.toTube.RemoveNut(move.nut);
 
-            int returnIndex = lastSourceTube.GetCurrentNuts().Count;
-            Vector3 returnPos = lastSourceTube.spawnPoints[returnIndex].position;
+            int returnIndex = move.fromTube.GetCurrentNuts().Count;
+            Vector3 returnPos = move.fromTube.spawnPoints[returnIndex].position;
 
-            lastMovedNut.transform.DOMove(returnPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+            move.nut.transform.DOMove(returnPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
             {
-                lastMovedNut.transform.SetParent(lastSourceTube.transform);
-                lastMovedNut.transform.localScale = lastSourceTube.GetOriginalScale();
-                lastSourceTube.AddNut(lastMovedNut);
+                move.nut.transform.SetParent(move.fromTube.transform);
+                move.nut.transform.localScale = move.fromTube.GetOriginalScale();
+                move.fromTube.AddNut(move.nut);
 
                 ClearLiftedNut();
-                // Chỉ trừ undo nếu hạt đã chuyển sang tube khác
-                if (lastSourceTube != lastTargetTube && uiManager != null)
+                // Trừ undo nếu hoàn tác thành công
+                if (move.fromTube != move.toTube && uiManager != null)
                 {
                     uiManager.MinusUndoNumber(1);
                     if (PlayerPrefs.GetInt(StringManager.undoNumber) <= 0)
                         undoFeePanel.SetActive(true);
                 }
-
-                lastMovedNut = null;
-                lastSourceTube = null;
-                lastTargetTube = null;
             });
         }
         else

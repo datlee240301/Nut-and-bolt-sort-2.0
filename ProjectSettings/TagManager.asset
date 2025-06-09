@@ -15,6 +15,7 @@ TagManager:
   - 9
   - 0
   - Tube
+  - bg
   layers:
   - Default
   - TransparentFX
