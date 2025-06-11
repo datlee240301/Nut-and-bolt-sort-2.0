@@ -62,7 +62,7 @@ public class UiManager : MonoBehaviour
         {
             if (PlayerPrefs.GetInt(StringManager.pressLevelButton) != 0)
                 levelText.text = "Level " + PlayerPrefs.GetInt(StringManager.currentLevelIdLevelButton).ToString();
-            else
+            else if (PlayerPrefs.GetInt(StringManager.pressLevelButton) == 0)
                 levelText.text = "Level " + PlayerPrefs.GetInt(StringManager.currentLevelId).ToString();
         }
     }

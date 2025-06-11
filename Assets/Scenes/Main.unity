@@ -3541,6 +3541,7 @@ MonoBehaviour:
   minDistance: 10
   maxDistance: 60
   yOffset: 0.67
+  isShaking: 0
 --- !u!1 &524425263
 GameObject:
   m_ObjectHideFlags: 0
@@ -5780,14 +5781,14 @@ MonoBehaviour:
   ticketNumberText: {fileID: 0}
   themePrefabs:
   - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
-  - {fileID: 21300000, guid: c340a960e093fcd489939ee20505ed1b, type: 3}
+  - {fileID: 21300000, guid: 67280a6be5450754b8287468978078a0, type: 3}
+  - {fileID: 21300000, guid: 1839d0d50d5c0ae45917aebd50d4883b, type: 3}
+  - {fileID: 21300000, guid: 7a29dfbe0cd573c4cb2c39839610c999, type: 3}
+  - {fileID: 21300000, guid: 43c79bf54bf7a9a44ad28b620867446d, type: 3}
+  - {fileID: 21300000, guid: cac51b08d5f342c4d82e7e4115d07d06, type: 3}
+  - {fileID: 21300000, guid: 343da6038a177594db067a9c09d93eb6, type: 3}
+  - {fileID: 21300000, guid: 347be8787cd53814497ee8c66c3d1599, type: 3}
+  - {fileID: 21300000, guid: 132acf954e7dc1f4ea675cf42866db18, type: 3}
   backgroundSpriteRenderer: {fileID: 875018786}
 --- !u!114 &875018786
 MonoBehaviour:

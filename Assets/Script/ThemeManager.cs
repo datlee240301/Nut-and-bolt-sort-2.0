@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,14 +18,24 @@ public class ThemeManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Menu")
         {
+            InitDefaultTheme();
             SetBuyStatus();
-            SetGreenCheckStatus();
             SetGreenCheckStatus();
         }
         else
         {
             SetBackground();
-            Debug.Log(PlayerPrefs.GetInt(StringManager.useTheme2));
+        }
+    }
+
+    void InitDefaultTheme()
+    {
+        // Nếu chưa từng lưu trạng thái theme 1, set mặc định đã mua và đang dùng
+        if (!PlayerPrefs.HasKey(StringManager.GetThemeKey(1)))
+        {
+            PlayerPrefs.SetInt(StringManager.GetThemeKey(1), 1); // Đã mua theme 1
+            PlayerPrefs.SetInt(StringManager.useTheme1, 1);      // Đang dùng theme 1
+            PlayerPrefs.Save();
         }
     }
 
@@ -54,7 +62,7 @@ public class ThemeManager : MonoBehaviour
 
     void SetBackground()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < themePrefabs.Length; i++)
         {
             if (PlayerPrefs.GetInt($"UseTheme{i + 1}") == 1)
             {
@@ -63,11 +71,14 @@ public class ThemeManager : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Button Zone
     /// </summary>
     public void BuyThemeButton(int themeId)
     {
+        if (themeId == 1) return; // Không cho mua theme mặc định
+
         int ticketNumber = PlayerPrefs.GetInt(StringManager.ticketNumber, 0);
         if (ticketNumber >= themePrice)
         {
@@ -92,31 +103,19 @@ public class ThemeManager : MonoBehaviour
         if (themeId < 1 || themeId > greenCheckIcons.Length)
             return;
 
-        // Reset all useTheme về 0
-        PlayerPrefs.SetInt(StringManager.useTheme1, 0);
-        PlayerPrefs.SetInt(StringManager.useTheme2, 0);
-        PlayerPrefs.SetInt(StringManager.useTheme3, 0);
-        PlayerPrefs.SetInt(StringManager.useTheme4, 0);
-        PlayerPrefs.SetInt(StringManager.useTheme5, 0);
-        PlayerPrefs.SetInt(StringManager.useTheme6, 0);
+        // Reset tất cả useTheme về 0
+        for (int i = 1; i <= greenCheckIcons.Length; i++)
+        {
+            PlayerPrefs.SetInt($"UseTheme{i}", 0);
+        }
 
         // Set theme được chọn về 1
-        switch (themeId)
-        {
-            case 1: PlayerPrefs.SetInt(StringManager.useTheme1, 1); break;
-            case 2: PlayerPrefs.SetInt(StringManager.useTheme2, 1); break;
-            case 3: PlayerPrefs.SetInt(StringManager.useTheme3, 1); break;
-            case 4: PlayerPrefs.SetInt(StringManager.useTheme4, 1); break;
-            case 5: PlayerPrefs.SetInt(StringManager.useTheme5, 1); break;
-            case 6: PlayerPrefs.SetInt(StringManager.useTheme6, 1); break;
-        }
-
+        PlayerPrefs.SetInt($"UseTheme{themeId}", 1);
         PlayerPrefs.Save();
 
-        foreach (var greenCheck in greenCheckIcons)
+        for (int i = 0; i < greenCheckIcons.Length; i++)
         {
-            greenCheck.SetActive(false);
+            greenCheckIcons[i].SetActive(i == (themeId - 1));
         }
-        greenCheckIcons[themeId - 1].SetActive(true);
     }
 }

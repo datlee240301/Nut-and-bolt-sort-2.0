@@ -1,134 +1,135 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using CandyCoded.HapticFeedback;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Purchasing;
-using UnityEngine.Purchasing.Extension;
 using UnityEngine.UI;
+using TMPro;
 
-public class IAPManager : MonoBehaviour
+public class IAPManager : MonoBehaviour, IStoreListener
 {
-    private string Pack1 = "100coin.diamondsort.pack1";
-    private string Pack2 = "300coin.diamondsort.pack2";
-    private string Pack3 = "500coin.diamondsort.pack3";
-    private string Pack4 = "900coin.diamondsort.pack4";
-    private string Pack5 = "1200coin.diamondsort.pack5";
-    private string Pack6 = "1500coin.diamondsort.pack6";
-    private string Pack7 = "2000coin.diamondsort.pack7";
-    private string Pack8 = "2500coin.diamondsort.pack8";
-    private string Pack9 = "3000coin.diamondsort.pack9";
-    [SerializeField] Button coin100Button;
-    [SerializeField] Button coin300Button;
-    [SerializeField] Button coin500Button;
-    [SerializeField] Button coin900Button;
-    [SerializeField] Button coin1200Button;
-    [SerializeField] Button coin1500Button;
-    [SerializeField] Button coin20000Button;
-    [SerializeField] Button coin2500Button;
-    [SerializeField] Button coin3000Button;
+    private IStoreController storeController;
+    private IExtensionProvider storeExtensionProvider;
 
-    UiManager uiManager;
+    [System.Serializable]
+    public class IAPProduct
+    {
+        public string productId;
+        public int coinAmount;
+    }
 
-    private void Start()
+    [Header("Product Configs (match with IAP Catalog)")]
+    public List<IAPProduct> products = new List<IAPProduct>();
+
+    [Header("Buttons (match order of products)")]
+    public List<Button> buttons = new List<Button>();
+
+    private UiManager uiManager;
+
+    void Start()
     {
         uiManager = FindObjectOfType<UiManager>();
-    }
 
-    public void OnPurchaseCompleted(Product product)
-    {
-        if (product.definition.id == Pack1)
+#if FORCE_FAKE_IAP
+        var module = StandardPurchasingModule.Instance(AppStore.fake);
+        module.useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
+#else
+        var module = StandardPurchasingModule.Instance(AppStore.GooglePlay);
+#endif
+
+        var builder = ConfigurationBuilder.Instance(module);
+
+        foreach (var item in products)
         {
-            // Assuming you have a method to add coins in UiManager
-            uiManager.PlusticketNumber(100);
-            Debug.Log("Purchase successful: " + product.definition.id);
+            builder.AddProduct(item.productId, ProductType.Consumable);
         }
-        else if (product.definition.id == Pack2)
+
+        UnityPurchasing.Initialize(this, builder);
+
+        for (int i = 0; i < buttons.Count && i < products.Count; i++)
         {
-            uiManager.PlusticketNumber(300);
-        }
-        else if (product.definition.id == Pack3)
-        {
-            uiManager.PlusticketNumber(500);
-        }
-        else if (product.definition.id == Pack4)
-        {
-            uiManager.PlusticketNumber(900);
-        }
-        else if (product.definition.id == Pack5)
-        {
-            uiManager.PlusticketNumber(1200);
-        }
-        else if (product.definition.id == Pack6)
-        {
-            uiManager.PlusticketNumber(1500);
-        }
-        else if (product.definition.id == Pack7)
-        {
-            uiManager.PlusticketNumber(2000);
-        }
-        else if (product.definition.id == Pack8)
-        {
-            uiManager.PlusticketNumber(2500);
-        }
-        else if (product.definition.id == Pack9)
-        {
-            uiManager.PlusticketNumber(3000);
+            int index = i;
+            buttons[i].onClick.AddListener(() => BuyProduct(products[index].productId));
         }
     }
 
-    public void OnPurchaseFailed(Product product, PurchaseFailureDescription reason)
+    public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        Debug.LogError("Purchase failed: " + product.definition.id + ", Reason: " + reason);
+        storeController = controller;
+        storeExtensionProvider = extensions;
+
+        UpdateAllButtonPrices();
+        Debug.Log("IAP Initialized");
     }
 
-    public void OnProductFetched(Product product)
+    public void OnInitializeFailed(InitializationFailureReason error)
     {
-        if (product.definition.id == Pack1)
+        Debug.LogError("IAP Init Failed: " + error);
+    }
+
+    public void OnInitializeFailed(InitializationFailureReason error, string message)
+    {
+        Debug.LogError("IAP Init Failed: " + error + " | " + message);
+    }
+
+    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
+    {
+        foreach (var item in products)
         {
-            UpdateButtonPrice(coin100Button, product);
+            if (args.purchasedProduct.definition.id == item.productId)
+            {
+                uiManager.PlusticketNumber(item.coinAmount);
+                Debug.Log("Purchase success: " + item.productId);
+                break;
+            }
         }
-        else if (product.definition.id == Pack2)
+        return PurchaseProcessingResult.Complete;
+    }
+
+    public void OnPurchaseFailed(Product product, PurchaseFailureReason reason)
+    {
+        Debug.LogError($"Purchase failed: {product.definition.id}, Reason: {reason}");
+    }
+
+    public void BuyProduct(string productId)
+    {
+        Debug.Log("Buying product: " + productId);
+        if (storeController == null)
         {
-            UpdateButtonPrice(coin300Button, product);
+            Debug.LogWarning("Store not initialized yet.");
+            return;
         }
-        else if (product.definition.id == Pack3)
+
+        Product product = storeController.products.WithID(productId);
+        if (product != null && product.availableToPurchase)
         {
-            UpdateButtonPrice(coin500Button, product);
+            storeController.InitiatePurchase(product);
         }
-        else if (product.definition.id == Pack4)
+        else
         {
-            UpdateButtonPrice(coin900Button, product);
-        }
-        else if (product.definition.id == Pack5)
-        {
-            UpdateButtonPrice(coin1200Button, product);
-        }
-        else if (product.definition.id == Pack6)
-        {
-            UpdateButtonPrice(coin1500Button, product);
-        }
-        else if (product.definition.id == Pack7)
-        {
-            UpdateButtonPrice(coin20000Button, product);
-        }
-        else if (product.definition.id == Pack8)
-        {
-            UpdateButtonPrice(coin2500Button, product);
-        }
-        else if (product.definition.id == Pack9)
-        {
-            UpdateButtonPrice(coin3000Button, product);
+            Debug.LogWarning("Product not available or not found: " + productId);
         }
     }
 
-    private void UpdateButtonPrice(Button button, Product product)
+    private void UpdateAllButtonPrices()
     {
-        TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
-        if (buttonText != null)
+        for (int i = 0; i < buttons.Count && i < products.Count; i++)
         {
-            buttonText.text = product.metadata.localizedPrice + " " + product.metadata.isoCurrencyCode;
+            UpdateButtonPrice(buttons[i], products[i].productId);
+        }
+    }
+
+    private void UpdateButtonPrice(Button button, string productId)
+    {
+        if (storeController == null) return;
+
+        Product product = storeController.products.WithID(productId);
+        if (product != null && product.availableToPurchase)
+        {
+            TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
+            if (text != null)
+            {
+                text.text = product.metadata.localizedPriceString + " $";
+                text.fontSize = 40.8f;
+            }
         }
     }
 }
