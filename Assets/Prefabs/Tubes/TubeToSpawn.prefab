@@ -678,6 +678,7 @@ MonoBehaviour:
   collisionEffectPrefab: {fileID: 6009531544441479210, guid: 1f8b1d84a73f840c0a3a1d7079b1e277, type: 3}
   fullColumnEffectPrefab: {fileID: 709185110169773962, guid: 56aa23857b6d942dda6e253ba0216782, type: 3}
   bg: {fileID: 0}
+  nutMoveDuration: 0.25
 --- !u!114 &3692766644590859492
 MonoBehaviour:
   m_ObjectHideFlags: 0

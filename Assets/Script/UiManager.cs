@@ -60,6 +60,7 @@ public class UiManager : MonoBehaviour
         SetSettingButton();
         if (SceneManager.GetActiveScene().name == "Main")
         {
+            if (levelText == null) return;
             if (PlayerPrefs.GetInt(StringManager.pressLevelButton) != 0)
                 levelText.text = "Level " + PlayerPrefs.GetInt(StringManager.currentLevelIdLevelButton).ToString();
             else if (PlayerPrefs.GetInt(StringManager.pressLevelButton) == 0)
@@ -319,6 +320,14 @@ public class UiManager : MonoBehaviour
         }
     }
 
+    public void SetPackId(int packId)
+    {
+        if (packId >= 1 && packId <= 9)
+        {
+            PlayerPrefs.SetInt(StringManager.PackId, packId);
+        }
+        FindObjectOfType<FakeStoreManager>().UpdateText();
+    }
     // public void SetThemeIdButton(int themeId)
     // {
     //     if (themeId == 1)

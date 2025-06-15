@@ -5,7 +5,7 @@ public class TubeGridLayout : MonoBehaviour
 {
     [Header("Grid Settings")]
     public int maxTubesPerRow = 5;
-    public float spacingX = 2.5f;
+    float spacingX = 1.94f;
     public float spacingY = 3.0f;
 
     void Update()

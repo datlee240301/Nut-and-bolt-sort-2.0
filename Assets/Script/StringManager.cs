@@ -28,6 +28,7 @@ internal class StringManager
     internal static string pressPlayButton = "PressPlayButton";
     internal static string currentLevelIdLevelButton = "CurrentLevelIdLevelButton";
     internal static string pressLevelButton = "PressLevelButton";
+    internal static string PackId = "PackId";
 
     public static string GetThemeKey(int themeId)
     {

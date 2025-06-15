@@ -1,135 +1,137 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Services.Core;
+using Unity.Services.Core.Environments;
 using UnityEngine;
 using UnityEngine.Purchasing;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.Purchasing.Extension;
 
-public class IAPManager : MonoBehaviour, IStoreListener
+public class IAPManager : MonoBehaviour, IStoreListener, IDetailedStoreListener
+
 {
-    private IStoreController storeController;
-    private IExtensionProvider storeExtensionProvider;
-
-    [System.Serializable]
-    public class IAPProduct
+    [SerializeField] private bool UseFakeStore = false;
+    private Action OnPurchaseCompleted;
+    private IStoreController StoreController;
+    private IExtensionProvider ExtensionProvider;
+    
+    private async void Awake()
     {
-        public string productId;
-        public int coinAmount;
-    }
-
-    [Header("Product Configs (match with IAP Catalog)")]
-    public List<IAPProduct> products = new List<IAPProduct>();
-
-    [Header("Buttons (match order of products)")]
-    public List<Button> buttons = new List<Button>();
-
-    private UiManager uiManager;
-
-    void Start()
-    {
-        uiManager = FindObjectOfType<UiManager>();
-
-#if FORCE_FAKE_IAP
-        var module = StandardPurchasingModule.Instance(AppStore.fake);
-        module.useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
+        InitializationOptions options = new InitializationOptions()
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            .SetEnvironmentName("test");
 #else
-        var module = StandardPurchasingModule.Instance(AppStore.GooglePlay);
+            .SetEnvironmentName("production");
 #endif
-
-        var builder = ConfigurationBuilder.Instance(module);
-
-        foreach (var item in products)
-        {
-            builder.AddProduct(item.productId, ProductType.Consumable);
-        }
-
-        UnityPurchasing.Initialize(this, builder);
-
-        for (int i = 0; i < buttons.Count && i < products.Count; i++)
-        {
-            int index = i;
-            buttons[i].onClick.AddListener(() => BuyProduct(products[index].productId));
-        }
+        await UnityServices.InitializeAsync(options);
+        ResourceRequest operation = Resources.LoadAsync<TextAsset>("IAPProductCatalog");
+        operation.completed += HandleIAPCatalogLoaded;
     }
-
-    public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
+    
+    private void HandleIAPCatalogLoaded(AsyncOperation Operation)
     {
-        storeController = controller;
-        storeExtensionProvider = extensions;
+        ResourceRequest request = Operation as ResourceRequest;
 
-        UpdateAllButtonPrices();
-        Debug.Log("IAP Initialized");
+        ProductCatalog catalog = JsonUtility.FromJson<ProductCatalog>((request.asset as TextAsset).text);
+
+        if (UseFakeStore)
+        {
+            StandardPurchasingModule.Instance().useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
+            StandardPurchasingModule.Instance().useFakeStoreAlways = true;
+        }
+
+#if UNITY_ANDROID
+        ConfigurationBuilder builder = ConfigurationBuilder.Instance(
+            StandardPurchasingModule.Instance(AppStore.GooglePlay)
+        );
+#elif UNITY_IOS
+        ConfigurationBuilder builder = ConfigurationBuilder.Instance(
+            StandardPurchasingModule.Instance(AppStore.AppleAppStore)
+        );
+#else
+        ConfigurationBuilder builder = ConfigurationBuilder.Instance(
+            StandardPurchasingModule.Instance(AppStore.NotSpecified)
+        );
+#endif
+        foreach (ProductCatalogItem item in catalog.allProducts)
+        {
+            builder.AddProduct(item.id, item.type);
+        }
+
+        Debug.Log($"Initializing Unity IAP with {builder.products.Count} products");
+        for (int i = 0; i < builder.products.Count; i++)
+        {
+            var valueAndIndex = builder.products.Select((Value, Index) => new { Value, Index })
+                .ToList();
+            Debug.Log(valueAndIndex[i].Value);
+        }
+        UnityPurchasing.Initialize(this, builder);
+    }
+    
+    public IEnumerator CreateHandleProduct(IAPProduct pack)
+    {
+        List<Product> sortedProducts = StoreController.products.all
+            .TakeWhile(item => !item.definition.id.Contains("sale"))
+            .OrderBy(item => item.metadata.localizedPrice)
+            .ToList();
+        foreach (Product product in sortedProducts)
+        {
+            if (pack.PurchaseID == product.definition.id)
+            {
+                var code = "";
+                var price = "";
+                code = StoreController.products.WithID(pack.PurchaseID).metadata.isoCurrencyCode;
+                price = StoreController.products.WithID(pack.PurchaseID).metadata.localizedPrice.ToString();
+                pack.OnPurchase += HandlePurchase;
+                pack.Setup(product, code, price);
+            }
+        }
+        yield return null;
+    }
+    
+    private void HandlePurchase(Product product, Action OnPurchaseCompleted)
+    {
+        this.OnPurchaseCompleted = OnPurchaseCompleted;
+        StoreController.InitiatePurchase(product);
     }
 
+    
     public void OnInitializeFailed(InitializationFailureReason error)
     {
-        Debug.LogError("IAP Init Failed: " + error);
+        Debug.LogError($"IAP Initialization Failed: {error}");
     }
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
-        Debug.LogError("IAP Init Failed: " + error + " | " + message);
+        Debug.LogError($"IAP Initialization Failed: {error}, Message: {message}");
     }
 
-    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
+    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
     {
-        foreach (var item in products)
-        {
-            if (args.purchasedProduct.definition.id == item.productId)
-            {
-                uiManager.PlusticketNumber(item.coinAmount);
-                Debug.Log("Purchase success: " + item.productId);
-                break;
-            }
-        }
+        Debug.Log($"Successfully purchased {purchaseEvent.purchasedProduct.definition.id}");
+        OnPurchaseCompleted?.Invoke();
+        OnPurchaseCompleted = null;
         return PurchaseProcessingResult.Complete;
     }
 
-    public void OnPurchaseFailed(Product product, PurchaseFailureReason reason)
+    public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
-        Debug.LogError($"Purchase failed: {product.definition.id}, Reason: {reason}");
+        Debug.Log($"Failed to purchase {product.definition.id} because {failureReason}");
+        OnPurchaseCompleted?.Invoke();
+        OnPurchaseCompleted = null;
     }
 
-    public void BuyProduct(string productId)
+    public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        Debug.Log("Buying product: " + productId);
-        if (storeController == null)
-        {
-            Debug.LogWarning("Store not initialized yet.");
-            return;
-        }
+        StoreController = controller;
+        ExtensionProvider = extensions;
 
-        Product product = storeController.products.WithID(productId);
-        if (product != null && product.availableToPurchase)
-        {
-            storeController.InitiatePurchase(product);
-        }
-        else
-        {
-            Debug.LogWarning("Product not available or not found: " + productId);
-        }
+        Debug.LogError($"Successfully Initialized Unity IAP. Store Controller has {StoreController.products.all.Length} products");
     }
 
-    private void UpdateAllButtonPrices()
+    public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
     {
-        for (int i = 0; i < buttons.Count && i < products.Count; i++)
-        {
-            UpdateButtonPrice(buttons[i], products[i].productId);
-        }
-    }
-
-    private void UpdateButtonPrice(Button button, string productId)
-    {
-        if (storeController == null) return;
-
-        Product product = storeController.products.WithID(productId);
-        if (product != null && product.availableToPurchase)
-        {
-            TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
-            if (text != null)
-            {
-                text.text = product.metadata.localizedPriceString + " $";
-                text.fontSize = 40.8f;
-            }
-        }
+        Debug.Log($"Failed to purchase {product.definition.id} because {failureDescription}");
     }
 }

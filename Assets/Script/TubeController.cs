@@ -11,7 +11,6 @@ public class TubeController : MonoBehaviour
     public GameObject[] nutPrefabs;
     public GameObject[] specialNutsPrefabs;
     public Transform waitPoint;
-
     public Transform visual; // Gán visual tại đây trong Inspector
 
     private List<GameObject> currentNuts = new List<GameObject>();
@@ -20,11 +19,13 @@ public class TubeController : MonoBehaviour
     private Vector3 originalScale;
     private int activeSpawnCount = 0;
     private bool isPointerOverUI;
-    [SerializeField] GameObject collisionEffectPrefab;
-    [SerializeField] GameObject fullColumnEffectPrefab;
-    [SerializeField] Image bg;
-
     private bool isMovingNut = false;
+
+    [SerializeField] private GameObject collisionEffectPrefab;
+    [SerializeField] private GameObject fullColumnEffectPrefab;
+    [SerializeField] private Image bg;
+
+    [SerializeField] private float nutMoveDuration = 0.15f; // 💡 tốc độ di chuyển nut
 
     void Start()
     {
@@ -41,7 +42,7 @@ public class TubeController : MonoBehaviour
         for (int i = 0; i < Mathf.Min(spawnPoints.Length, nutPrefabs.Length); i++)
         {
             GameObject nut = Instantiate(nutPrefabs[i], spawnPoints[i].position, Quaternion.identity);
-            nut.transform.SetParent(visual); // Gán visual là cha
+            nut.transform.SetParent(visual);
             originalScale = nut.transform.localScale;
             currentNuts.Add(nut);
         }
@@ -49,7 +50,7 @@ public class TubeController : MonoBehaviour
         for (int i = 0; i < Mathf.Min(spawnPoints.Length, specialNutsPrefabs.Length); i++)
         {
             GameObject special = Instantiate(specialNutsPrefabs[i], spawnPoints[i].position, Quaternion.identity);
-            special.transform.SetParent(visual); // Gán visual là cha
+            special.transform.SetParent(visual);
             special.transform.localScale = originalScale;
             spawnedSpecialNuts.Add(special);
         }
@@ -77,10 +78,9 @@ public class TubeController : MonoBehaviour
     {
         if (!isPointerOverUI)
         {
-            // 👇 Rung tube khi click
             if (visual != null)
             {
-                visual.DOComplete(); // Ngăn rung chồng
+                visual.DOComplete();
                 visual.DOShakePosition(0.15f, new Vector3(0f, 0.2f, 0f), 10, 90, false, false);
             }
 
@@ -98,23 +98,14 @@ public class TubeController : MonoBehaviour
                     {
                         GameObject liftedNut = TubeManager.Instance.liftedNut;
 
-                        if (currentNuts.Count == 0)
+                        if (currentNuts.Count == 0 || currentNuts[currentNuts.Count - 1].tag == liftedNut.tag)
                         {
                             ReceiveNut();
                         }
                         else
                         {
-                            GameObject topNut = currentNuts[currentNuts.Count - 1];
-
-                            if (topNut.tag == liftedNut.tag)
-                            {
-                                ReceiveNut();
-                            }
-                            else
-                            {
-                                TubeManager.Instance.sourceTube.ReturnNutToOriginal();
-                                Invoke(nameof(TryLiftNut), 0.35f);
-                            }
+                            TubeManager.Instance.sourceTube.ReturnNutToOriginal();
+                            Invoke(nameof(TryLiftNut), 0.35f);
                         }
                     }
                     else
@@ -140,7 +131,7 @@ public class TubeController : MonoBehaviour
 
             TubeManager.Instance.SetAnimating(true);
             TubeManager.Instance.SetLiftedNut(topNut, this);
-            topNut.transform.DOMove(liftPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+            topNut.transform.DOMove(liftPos, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
             {
                 TubeManager.Instance.SetAnimating(false);
             });
@@ -154,8 +145,7 @@ public class TubeController : MonoBehaviour
         if (currentNuts.Count == 4)
         {
             string tagCheck = currentNuts[0].tag;
-            bool allSame = currentNuts.TrueForAll(nut => nut.tag == tagCheck);
-            if (allSame) return;
+            if (currentNuts.TrueForAll(n => n.tag == tagCheck)) return;
         }
 
         GameObject topNut = currentNuts[currentNuts.Count - 1];
@@ -163,7 +153,7 @@ public class TubeController : MonoBehaviour
 
         isMovingNut = true;
         TubeManager.Instance.SetAnimating(true);
-        topNut.transform.DOMove(waitPoint.position, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+        topNut.transform.DOMove(waitPoint.position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             TubeManager.Instance.SetLiftedNut(topNut, this);
             TubeManager.Instance.SetAnimating(false);
@@ -181,9 +171,7 @@ public class TubeController : MonoBehaviour
 
         isMovingNut = true;
         TubeManager.Instance.SetAnimating(true);
-        Vector3 returnPos = spawnPoints[targetIndex].position;
-
-        nut.transform.DOMove(returnPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+        nut.transform.DOMove(spawnPoints[targetIndex].position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             nut.transform.SetParent(visual);
             nut.transform.localScale = originalScale;
@@ -204,56 +192,37 @@ public class TubeController : MonoBehaviour
 
         GameObject nut = TubeManager.Instance.liftedNut;
         TubeController source = TubeManager.Instance.sourceTube;
-
         bool allowChainMove = currentNuts.Count == 0;
-
-        bool canMoveAll = false;
-        if (currentNuts.Count > 0)
-        {
-            GameObject topNut = currentNuts[currentNuts.Count - 1];
-            if (topNut.tag == nut.tag) canMoveAll = true;
-        }
-        else
-        {
-            canMoveAll = allowChainMove;
-        }
+        bool canMoveAll = currentNuts.Count == 0 || currentNuts[currentNuts.Count - 1].tag == nut.tag;
 
         void MoveNextNut(GameObject movingNut)
         {
-            movingNut.transform.DOMove(source.waitPoint.position, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+            movingNut.transform.DOMove(source.waitPoint.position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
             {
-                movingNut.transform.DOMove(waitPoint.position, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+                movingNut.transform.DOMove(waitPoint.position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
                 {
                     int targetIndex = currentNuts.Count;
-                    Vector3 targetPos = spawnPoints[targetIndex].position;
-
-                    movingNut.transform.DOMove(targetPos, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+                    movingNut.transform.DOMove(spawnPoints[targetIndex].position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
                     {
                         movingNut.transform.SetParent(visual);
-
-                        if (originalScale == Vector3.zero)
-                            originalScale = movingNut.transform.localScale;
-
+                        if (originalScale == Vector3.zero) originalScale = movingNut.transform.localScale;
                         movingNut.transform.localScale = originalScale;
                         currentNuts.Add(movingNut);
 
-                        if (collisionEffectPrefab != null)
-                            Instantiate(collisionEffectPrefab, targetPos, Quaternion.identity);
+                        if (collisionEffectPrefab) Instantiate(collisionEffectPrefab, spawnPoints[targetIndex].position, Quaternion.identity);
 
                         if (currentNuts.Count == 4)
                         {
                             string tagCheck = currentNuts[0].tag;
-                            bool allSame = currentNuts.TrueForAll(n => n.tag == tagCheck);
-                            if (allSame && fullColumnEffectPrefab != null)
+                            if (currentNuts.TrueForAll(n => n.tag == tagCheck) && fullColumnEffectPrefab)
                                 Instantiate(fullColumnEffectPrefab, waitPoint.position, Quaternion.identity);
                         }
 
                         int fromIndex = source.currentNuts.Count;
                         if (fromIndex > 0 && fromIndex - 1 < source.spawnedSpecialNuts.Count)
                         {
-                            GameObject specialNutAbove = source.spawnedSpecialNuts[fromIndex - 1];
-                            if (specialNutAbove != null)
-                                specialNutAbove.SetActive(false);
+                            GameObject specialNut = source.spawnedSpecialNuts[fromIndex - 1];
+                            if (specialNut != null) specialNut.SetActive(false);
                         }
 
                         TubeManager.Instance.RegisterMove(movingNut, source, this);
@@ -281,15 +250,11 @@ public class TubeController : MonoBehaviour
     }
 
     public List<GameObject> GetCurrentNuts() => currentNuts;
-
     public void RemoveNut(GameObject nut) => currentNuts.Remove(nut);
-
     public void AddNut(GameObject nut)
     {
         if (originalScale == Vector3.zero)
-        {
             originalScale = nut.transform.localScale;
-        }
 
         currentNuts.Add(nut);
     }
