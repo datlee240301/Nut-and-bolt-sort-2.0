@@ -128,6 +128,7 @@ public class TubeManager : MonoBehaviour
 
     public void UndoLastMove()
     {
+        SoundManager.instance.PlayUIClickSound();
         if (PlayerPrefs.GetInt(StringManager.undoNumber) > 0 && !undoFeePanel.activeSelf)
         {
             if (IsAnimating || moveStack.Count == 0) return;
@@ -184,6 +185,7 @@ public class TubeManager : MonoBehaviour
     // ====== Tube Spawn + Reveal Support ======
     public void SpawnNewTube()
     {
+        SoundManager.instance.PlayUIClickSound();
         GameObject found = GameObject.Find("TubeGridLayout");
         if (found != null)
         {

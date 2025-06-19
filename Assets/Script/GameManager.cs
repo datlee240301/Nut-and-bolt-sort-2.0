@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviour
                 go.SetActive(true);
             }
         }
+
         uiManager.PlusticketNumber(10);
+        SoundManager.instance.PlayWinSound();
+        FindObjectOfType<MusicManager>().audioSource.volume = 0;
     }
 }

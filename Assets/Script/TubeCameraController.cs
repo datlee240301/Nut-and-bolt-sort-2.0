@@ -38,7 +38,7 @@ public class TubeCameraController : MonoBehaviour
         Vector3 centre = bounds.center;
         centre.y += yOffset; // <-- Áp dụng yOffset tại đây
 
-        if (tubes.Length == 5|| tubes.Length == 10)
+        if (tubes.Length >= 5 && tubes.Length <= 10)
             screenPadding = 0.31f;
         else
             screenPadding = .8f;

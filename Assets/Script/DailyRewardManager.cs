@@ -30,6 +30,7 @@ public class DailyRewardManager : MonoBehaviour
 
     public void ClaimTicketButton(int amount)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (PlayerPrefs.GetInt(ClaimedKey, 0) == 0)
         {
             uiManager.PlusticketNumber(15);

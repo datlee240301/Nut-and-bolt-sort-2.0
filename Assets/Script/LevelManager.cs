@@ -63,6 +63,7 @@ public class LevelManager : MonoBehaviour
     /// Button Zone
     public void LoadLevelButton(int levelId)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (levelId <= PlayerPrefs.GetInt(StringManager.currentLevelId))
         {
             PlayerPrefs.SetInt(StringManager.pressLevelButton, 1);

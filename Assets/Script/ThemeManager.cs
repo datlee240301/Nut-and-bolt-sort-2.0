@@ -13,6 +13,7 @@ public class ThemeManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI ticketNumberText;
     [SerializeField] Sprite[] themePrefabs;
     [SerializeField] Image backgroundSpriteRenderer;
+    [SerializeField] UiPanelDotween noticePanel;
 
     void Start()
     {
@@ -34,7 +35,7 @@ public class ThemeManager : MonoBehaviour
         if (!PlayerPrefs.HasKey(StringManager.GetThemeKey(1)))
         {
             PlayerPrefs.SetInt(StringManager.GetThemeKey(1), 1); // Đã mua theme 1
-            PlayerPrefs.SetInt(StringManager.useTheme1, 1);      // Đang dùng theme 1
+            PlayerPrefs.SetInt(StringManager.useTheme1, 1); // Đang dùng theme 1
             PlayerPrefs.Save();
         }
     }
@@ -77,6 +78,7 @@ public class ThemeManager : MonoBehaviour
     /// </summary>
     public void BuyThemeButton(int themeId)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (themeId == 1) return; // Không cho mua theme mặc định
 
         int ticketNumber = PlayerPrefs.GetInt(StringManager.ticketNumber, 0);
@@ -96,10 +98,15 @@ public class ThemeManager : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            noticePanel.PanelFadeIn();
+        }
     }
 
     public void UseThemeButton(int themeId)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (themeId < 1 || themeId > greenCheckIcons.Length)
             return;
 

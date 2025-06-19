@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using CandyCoded.HapticFeedback;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -192,65 +193,93 @@ public class TubeController : MonoBehaviour
 
         GameObject nut = TubeManager.Instance.liftedNut;
         TubeController source = TubeManager.Instance.sourceTube;
-        bool allowChainMove = currentNuts.Count == 0;
-        bool canMoveAll = currentNuts.Count == 0 || currentNuts[currentNuts.Count - 1].tag == nut.tag;
+        string nutTag = nut.tag;
 
-        void MoveNextNut(GameObject movingNut)
+        List<GameObject> nutsToMove = new List<GameObject> { nut };
+
+        // Lấy thêm các nut cùng màu liên tiếp
+        for (int i = source.currentNuts.Count - 1; i >= 0; i--)
         {
-            movingNut.transform.DOMove(source.waitPoint.position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+            if (source.currentNuts[i].tag == nutTag)
             {
-                movingNut.transform.DOMove(waitPoint.position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+                nutsToMove.Add(source.currentNuts[i]);
+            }
+            else break;
+        }
+
+        int availableSpace = spawnPoints.Length - currentNuts.Count;
+        int moveCount = Mathf.Min(availableSpace, nutsToMove.Count);
+
+        float sequenceDelayStep = 0.15f;
+
+        for (int i = 0; i < moveCount; i++)
+        {
+            GameObject movingNut = nutsToMove[i];
+            int targetIndex = currentNuts.Count + i;
+
+            // Nut đầu đã bị remove rồi, các nut còn lại ta xóa thủ công
+            if (i != 0) source.currentNuts.Remove(movingNut);
+
+            int delayIndex = i;
+            float delay = delayIndex * sequenceDelayStep;
+
+            DOVirtual.DelayedCall(delay, () =>
+            {
+                Sequence moveSeq = DOTween.Sequence();
+
+                moveSeq.Append(movingNut.transform.DOMove(source.waitPoint.position, nutMoveDuration)
+                    .SetEase(Ease.OutQuad));
+                moveSeq.Append(movingNut.transform.DOMove(waitPoint.position, nutMoveDuration).SetEase(Ease.OutQuad));
+                moveSeq.Append(movingNut.transform.DOMove(spawnPoints[targetIndex].position, nutMoveDuration)
+                    .SetEase(Ease.OutQuad));
+
+                moveSeq.OnComplete(() =>
                 {
-                    int targetIndex = currentNuts.Count;
-                    movingNut.transform.DOMove(spawnPoints[targetIndex].position, nutMoveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+                    movingNut.transform.SetParent(visual);
+                    if (originalScale == Vector3.zero) originalScale = movingNut.transform.localScale;
+                    movingNut.transform.localScale = originalScale;
+                    currentNuts.Add(movingNut);
+
+                    if (collisionEffectPrefab)
                     {
-                        movingNut.transform.SetParent(visual);
-                        if (originalScale == Vector3.zero) originalScale = movingNut.transform.localScale;
-                        movingNut.transform.localScale = originalScale;
-                        currentNuts.Add(movingNut);
+                        SoundManager.instance.PlayMoveDiamondSound();
+                        Instantiate(collisionEffectPrefab, spawnPoints[targetIndex].position, Quaternion.identity);
+                    }
 
-                        if (collisionEffectPrefab) Instantiate(collisionEffectPrefab, spawnPoints[targetIndex].position, Quaternion.identity);
-
-                        if (currentNuts.Count == 4)
+                    if (currentNuts.Count == 4)
+                    {
+                        string tagCheck = currentNuts[0].tag;
+                        if (currentNuts.TrueForAll(n => n.tag == tagCheck) && fullColumnEffectPrefab)
                         {
-                            string tagCheck = currentNuts[0].tag;
-                            if (currentNuts.TrueForAll(n => n.tag == tagCheck) && fullColumnEffectPrefab)
-                                Instantiate(fullColumnEffectPrefab, waitPoint.position, Quaternion.identity);
+                            HapticFeedback.MediumFeedback();
+                            SoundManager.instance.PlayColumnDoneSound();
+                            Instantiate(fullColumnEffectPrefab, waitPoint.position, Quaternion.identity);
                         }
+                    }
 
-                        int fromIndex = source.currentNuts.Count;
-                        if (fromIndex > 0 && fromIndex - 1 < source.spawnedSpecialNuts.Count)
-                        {
-                            GameObject specialNut = source.spawnedSpecialNuts[fromIndex - 1];
-                            if (specialNut != null) specialNut.SetActive(false);
-                        }
+                    if (delayIndex < source.spawnedSpecialNuts.Count)
+                    {
+                        GameObject specialNut = source.spawnedSpecialNuts[source.currentNuts.Count];
+                        if (specialNut != null)
+                            specialNut.SetActive(false);
+                    }
 
-                        TubeManager.Instance.RegisterMove(movingNut, source, this);
+                    TubeManager.Instance.RegisterMove(movingNut, source, this);
 
-                        if (canMoveAll && currentNuts.Count < spawnPoints.Length && source.currentNuts.Count > 0)
-                        {
-                            GameObject nextNut = source.currentNuts[source.currentNuts.Count - 1];
-                            if (nextNut.tag == nut.tag)
-                            {
-                                source.currentNuts.RemoveAt(source.currentNuts.Count - 1);
-                                MoveNextNut(nextNut);
-                                return;
-                            }
-                        }
-
+                    if (delayIndex == moveCount - 1)
+                    {
                         TubeManager.Instance.ClearLiftedNut();
                         TubeManager.Instance.SetAnimating(false);
                         GameManager.Instance.CheckWinCondition();
-                    });
+                    }
                 });
             });
         }
-
-        MoveNextNut(nut);
     }
 
     public List<GameObject> GetCurrentNuts() => currentNuts;
     public void RemoveNut(GameObject nut) => currentNuts.Remove(nut);
+
     public void AddNut(GameObject nut)
     {
         if (originalScale == Vector3.zero)

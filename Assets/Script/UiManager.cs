@@ -151,6 +151,7 @@ public class UiManager : MonoBehaviour
             musicId = PlayerPrefs.GetInt(StringManager.musicId, 1);
             PlayerPrefs.SetInt(StringManager.musicId, musicId);
             musicButton.sprite = musicId == 1 ? musicOnSprite : musicOffSprite;
+            FindObjectOfType<MusicManager>().audioSource.volume = musicId == 1 ? 0.65f : 0;
         }
 
         if (soundButton != null)
@@ -158,6 +159,7 @@ public class UiManager : MonoBehaviour
             soundId = PlayerPrefs.GetInt(StringManager.soundId, 1);
             PlayerPrefs.SetInt(StringManager.soundId, soundId);
             soundButton.sprite = soundId == 1 ? soundOnSprite : soundOffSprite;
+            FindObjectOfType<SoundManager>().audioSource.volume = soundId == 1 ? 1 : 0;
         }
 
         if (vibrateButton != null)
@@ -193,6 +195,7 @@ public class UiManager : MonoBehaviour
     // }
     public void NextLevelButton()
     {
+        SoundManager.instance.PlayUIClickSound();
         if (PlayerPrefs.GetInt(StringManager.pressLevelButton) == 1)
         {
             PlayerPrefs.SetInt(StringManager.currentLevelIdLevelButton,
@@ -215,6 +218,7 @@ public class UiManager : MonoBehaviour
 
     public void MenuButton()
     {
+        SoundManager.instance.PlayUIClickSound();
         if (menuPanel.activeSelf)
         {
             menuPanel.SetActive(false);
@@ -234,34 +238,41 @@ public class UiManager : MonoBehaviour
 
     public void MusicButton()
     {
+        SoundManager.instance.PlayUIClickSound();
         if (musicButton.sprite == musicOnSprite)
         {
             musicButton.sprite = musicOffSprite;
             PlayerPrefs.SetInt(StringManager.musicId, 0);
+            FindObjectOfType<MusicManager>().audioSource.volume = 0;
         }
         else
         {
             musicButton.sprite = musicOnSprite;
             PlayerPrefs.SetInt(StringManager.musicId, 1);
+            FindObjectOfType<MusicManager>().audioSource.volume = 1;
         }
     }
 
     public void SoundButton()
     {
+        SoundManager.instance.PlayUIClickSound();
         if (soundButton.sprite == soundOnSprite)
         {
             soundButton.sprite = soundOffSprite;
             PlayerPrefs.SetInt(StringManager.soundId, 0);
+            FindObjectOfType<SoundManager>().audioSource.volume = 0;
         }
         else
         {
             soundButton.sprite = soundOnSprite;
             PlayerPrefs.SetInt(StringManager.soundId, 1);
+            FindObjectOfType<SoundManager>().audioSource.volume = 1;
         }
     }
 
     public void VibrateButton()
     {
+        SoundManager.instance.PlayUIClickSound();
         if (vibrateButton.sprite == vibrateOnSprite)
         {
             vibrateButton.sprite = vibrateOffSprite;
@@ -277,6 +288,7 @@ public class UiManager : MonoBehaviour
 
     public void LoadSceneButton(string sceneName)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (SceneManager.GetActiveScene().name == "Menu")
         {
             if (PlayerPrefs.GetInt(StringManager.currentLevelId) > 50)
@@ -312,6 +324,7 @@ public class UiManager : MonoBehaviour
 
     public void BuyThemeButton(int price)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (ticketNumber >= price)
         {
             ticketNumber -= price;
@@ -322,6 +335,7 @@ public class UiManager : MonoBehaviour
 
     public void SetPackId(int packId)
     {
+        SoundManager.instance.PlayUIClickSound();
         if (packId >= 1 && packId <= 9)
         {
             PlayerPrefs.SetInt(StringManager.PackId, packId);
