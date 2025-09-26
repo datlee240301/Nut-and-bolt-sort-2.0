@@ -59,13 +59,13 @@ public class IAPManager : MonoBehaviour, IStoreListener, IDetailedStoreListener
             builder.AddProduct(item.id, item.type);
         }
 
-        Debug.Log($"Initializing Unity IAP with {builder.products.Count} products");
-        for (int i = 0; i < builder.products.Count; i++)
-        {
-            var valueAndIndex = builder.products.Select((Value, Index) => new { Value, Index })
-                .ToList();
-            Debug.Log(valueAndIndex[i].Value);
-        }
+        // Debug.Log($"Initializing Unity IAP with {builder.products.Count} products");
+        // for (int i = 0; i < builder.products.Count; i++)
+        // {
+        //     var valueAndIndex = builder.products.Select((Value, Index) => new { Value, Index })
+        //         .ToList();
+        //     Debug.Log(valueAndIndex[i].Value);
+        // }
         UnityPurchasing.Initialize(this, builder);
     }
     

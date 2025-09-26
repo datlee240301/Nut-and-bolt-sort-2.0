@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
-using CandyCoded.HapticFeedback;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -251,7 +250,6 @@ public class TubeController : MonoBehaviour
                         string tagCheck = currentNuts[0].tag;
                         if (currentNuts.TrueForAll(n => n.tag == tagCheck) && fullColumnEffectPrefab)
                         {
-                            HapticFeedback.MediumFeedback();
                             SoundManager.instance.PlayColumnDoneSound();
                             Instantiate(fullColumnEffectPrefab, waitPoint.position, Quaternion.identity);
                         }
