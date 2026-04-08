@@ -10,6 +10,15 @@ using UnityEngine.UI;
 public static class MyPurchaseID
 {
     // public const string RemoveAds = "com.minigamehub.removeads";
+    public const string Pack1 = "100coin.diamondsort.pack1";
+    public const string Pack2 = "300coin.diamondsort.pack2";
+    public const string Pack3 = "500coin.diamondsort.pack3";
+    public const string Pack4 = "900coin.diamondsort.pack4";
+    public const string Pack5 = "1200coin.diamondsort.pack5";
+    public const string Pack6 = "1500coin.diamondsort.pack6";
+    public const string Pack7 = "2000coin.diamondsort.pack7";
+    public const string Pack8 = "2500coin.diamondsort.pack8";
+    public const string Pack9 = "2500coin.diamondsort.pack9";
 }
 
 public class IAPProduct : MonoBehaviour
@@ -26,20 +35,18 @@ public class IAPProduct : MonoBehaviour
 
     public event PurchaseEvent OnPurchase;
     private Product _model;
-    IAPManager iapManager;
-    UiManager uiManager;
+    UIManager _uiManager;
 
     private void Start()
     {
-        uiManager = FindObjectOfType<UiManager>();
-        iapManager = FindObjectOfType<IAPManager>();
+        _uiManager = FindObjectOfType<UIManager>();
         RegisterPurchase();
         RegisterEventButton();
     }
 
     protected virtual void RegisterPurchase()
     {
-        StartCoroutine(iapManager.CreateHandleProduct(this));
+        StartCoroutine(IAPManager.Instance.CreateHandleProduct(this));
     }
 
     public void Setup(Product product, string code, string price)
@@ -47,7 +54,7 @@ public class IAPProduct : MonoBehaviour
         _model = product;
         if (_price != null)
         {
-            _price.text = price + " " + code;
+            _price.text = price;
         }
 
         if (_discount != null)
@@ -69,7 +76,6 @@ public class IAPProduct : MonoBehaviour
     {
         _purchaseButton.onClick.AddListener(() =>
         {
-            //AudioManager.PlaySound("Click");
             Purchase();
         });
     }
@@ -83,32 +89,32 @@ public class IAPProduct : MonoBehaviour
     {
         switch (_purchaseID)
         {
-            case "100coin.diamondsort.pack1":
-                uiManager.PlusticketNumber(100);
+            // case MyPurchaseID.RemoveAds:
+            //     RemoveAdsPack();
+            //     break;
+            case MyPurchaseID.Pack1:
+                _uiManager.BuyTicket(100);
                 break;
-            case "300coin.diamondsort.pack2":
-                uiManager.PlusticketNumber(300);
+            case MyPurchaseID.Pack2:
+                _uiManager.BuyTicket(250);
                 break;
-            case "500coin.diamondsort.pack3":
-                uiManager.PlusticketNumber(500);
+            case MyPurchaseID.Pack3:
+                _uiManager.BuyTicket(500);
                 break;
-            case "900coin.diamondsort.pack4":
-                uiManager.PlusticketNumber(900);
+            case MyPurchaseID.Pack4:
+                _uiManager.BuyTicket(1000);
                 break;
-            case "1200coin.diamondsort.pack5":
-                uiManager.PlusticketNumber(1200);
+            case MyPurchaseID.Pack5:
+                _uiManager.BuyTicket(1500);
                 break;
-            case "1500coin.diamondsort.pack6":
-                uiManager.PlusticketNumber(1500);
+            case MyPurchaseID.Pack6:
+                _uiManager.BuyTicket(3000);
                 break;
-            case "2000coin.diamondsort.pack7":
-                uiManager.PlusticketNumber(2000);
+            case MyPurchaseID.Pack7:
+                _uiManager.BuyTicket(4500);
                 break;
-            case "2500coin.diamondsort.pack8":
-                uiManager.PlusticketNumber(2500);
-                break;
-            case "3000coin.diamondsort.pack9":
-                uiManager.PlusticketNumber(3000);
+            case MyPurchaseID.Pack8:
+                _uiManager.BuyTicket(6000);
                 break;
         }
 
@@ -119,9 +125,13 @@ public class IAPProduct : MonoBehaviour
             _purchaseButton.interactable = false;
         }
     }
-    // private void RemoveAdsPack()
-    // {
-    //     ResourceManager.RemoveAds = true;
-    //     // GameEventManager.PurchaseAds?.Invoke();
-    // }
+    
+    private void AddCoin(int amount)
+    {
+        
+    }
+    
+    private void RemoveAdsPack()
+    {
+    }
 }
