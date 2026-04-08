@@ -1408,7 +1408,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 137285130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 1500coin.diamondsort.pack6
@@ -1919,7 +1919,6 @@ GameObject:
   - component: {fileID: 182422986}
   - component: {fileID: 182422989}
   - component: {fileID: 182422988}
-  - component: {fileID: 182422987}
   m_Layer: 5
   m_Name: TicketShopBoard
   m_TagString: Untagged
@@ -1949,19 +1948,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.00059128, y: -106.12}
   m_SizeDelta: {x: 886.15, y: 1707.75}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &182422987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 182422985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eb687b42ce0b5240b492d6ba18fa305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseFakeStore: 1
 --- !u!114 &182422988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2279,6 +2265,7 @@ GameObject:
   - component: {fileID: 231303755}
   - component: {fileID: 231303754}
   - component: {fileID: 231303758}
+  - component: {fileID: 231303759}
   m_Layer: 5
   m_Name: MainUi
   m_TagString: Untagged
@@ -2413,6 +2400,19 @@ MonoBehaviour:
   aura: {fileID: 1304450015}
   auraRotateSpeed: 100
   maxLevelPanel: {fileID: 0}
+--- !u!114 &231303759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231303753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b029536650585d742a362e60e9a86283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IAPManager
+  UseFakeStore: 0
 --- !u!1 &231730770
 GameObject:
   m_ObjectHideFlags: 0
@@ -3147,7 +3147,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 293326612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 300coin.diamondsort.pack2
@@ -5674,7 +5674,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 497282319}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 100coin.diamondsort.pack1
@@ -7801,7 +7801,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 810375815}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 500coin.diamondsort.pack3
@@ -9470,7 +9470,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 953916472}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 2500coin.diamondsort.pack8
@@ -10009,7 +10009,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1035352563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 2000coin.diamondsort.pack7
@@ -12367,7 +12367,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1410528932}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 1200coin.diamondsort.pack5
@@ -14887,7 +14887,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1702968393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 3000coin.diamondsort.pack9
@@ -17445,7 +17445,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2088510995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ee784a3d8bdf94a9d29f9573b77705, type: 3}
+  m_Script: {fileID: 11500000, guid: e6d8834d61f17e94ba6a7438b1d1160f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _purchaseID: 900coin.diamondsort.pack4

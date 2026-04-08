@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public static class MyPurchaseID
 {
-    // public const string RemoveAds = "com.minigamehub.removeads";
     public const string Pack1 = "100coin.diamondsort.pack1";
     public const string Pack2 = "300coin.diamondsort.pack2";
     public const string Pack3 = "500coin.diamondsort.pack3";
@@ -18,7 +17,7 @@ public static class MyPurchaseID
     public const string Pack6 = "1500coin.diamondsort.pack6";
     public const string Pack7 = "2000coin.diamondsort.pack7";
     public const string Pack8 = "2500coin.diamondsort.pack8";
-    public const string Pack9 = "2500coin.diamondsort.pack9";
+    public const string Pack9 = "3000coin.diamondsort.pack9";
 }
 
 public class IAPProduct : MonoBehaviour
@@ -35,11 +34,11 @@ public class IAPProduct : MonoBehaviour
 
     public event PurchaseEvent OnPurchase;
     private Product _model;
-    UIManager _uiManager;
+    UiManager _uiManager;
 
     private void Start()
     {
-        _uiManager = FindObjectOfType<UIManager>();
+        _uiManager = FindObjectOfType<UiManager>();
         RegisterPurchase();
         RegisterEventButton();
     }
@@ -115,6 +114,9 @@ public class IAPProduct : MonoBehaviour
                 break;
             case MyPurchaseID.Pack8:
                 _uiManager.BuyTicket(6000);
+                break;
+            case MyPurchaseID.Pack9:
+                _uiManager.BuyTicket(9000);
                 break;
         }
 
