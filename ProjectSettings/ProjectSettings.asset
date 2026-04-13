@@ -143,7 +143,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 1.0
+  bundleVersion: 1.7
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -166,14 +166,14 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.diamond.sort.puzzle
+    Android: com.diamondsort.puzzle
   buildNumber:
     Standalone: 0
     VisionOS: 0
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 1
+  AndroidBundleVersionCode: 10
   AndroidMinSdkVersion: 25
   AndroidTargetSdkVersion: 35
   AndroidPreferredInstallLocation: 1
@@ -298,7 +298,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: e289b70f927c9d14db13e5c28390aa80, type: 3}
+      m_Icon: {fileID: 2800000, guid: 14ffacec9ee18f847a21bc70cd13d2fb, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -806,11 +806,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 755870ae-3f38-4ff3-978a-f1a5720bb904
+  cloudProjectId: 9738241e-9057-4a6c-866e-648ed09c8ab5
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Nut-and-bolt-sort-2.0 (1)
-  organizationId: datlee01
+  projectName: Diamond Sort (1)
+  organizationId: le-tien-dat
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
