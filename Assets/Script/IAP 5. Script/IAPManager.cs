@@ -58,6 +58,8 @@ public class IAPManager : Singleton<IAPManager>
             new ProductDefinition(MyPurchaseID.Pack7, ProductType.Consumable),
             new ProductDefinition(MyPurchaseID.Pack8, ProductType.Consumable),
             new ProductDefinition(MyPurchaseID.Pack9, ProductType.Consumable),
+            new ProductDefinition(MyPurchaseID.Pack10, ProductType.Consumable),
+            new ProductDefinition(MyPurchaseID.Pack11, ProductType.Consumable),
         };
     }
 

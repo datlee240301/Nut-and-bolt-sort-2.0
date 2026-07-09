@@ -18,6 +18,8 @@ public static class MyPurchaseID
     public const string Pack7 = "2000coin.diamondsort.pack7";
     public const string Pack8 = "2500coin.diamondsort.pack8";
     public const string Pack9 = "3000coin.diamondsort.pack9";
+    public const string Pack10 = "pack_50";
+    public const string Pack11 = "pack_80";
 }
 
 public class IAPProduct : MonoBehaviour
@@ -117,6 +119,12 @@ public class IAPProduct : MonoBehaviour
                 break;
             case MyPurchaseID.Pack9:
                 _uiManager.BuyTicket(9000);
+                break;
+            case MyPurchaseID.Pack10:
+                _uiManager.BuyTicket(50);
+                break;
+            case MyPurchaseID.Pack11:
+                _uiManager.BuyTicket(80);
                 break;
         }
 
