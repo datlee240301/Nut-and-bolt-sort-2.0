@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ScrewJam.Auth;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class IAPManager : Singleton<IAPManager>
     public event Action<string> OnPurchaseSuccessful;
 
     [SerializeField] private bool UseFakeStore = false;
+
     private StoreController _storeController;
     private bool _validatePurchases;
     private bool _areProductsFetched;
@@ -26,8 +28,16 @@ public class IAPManager : Singleton<IAPManager>
 #else
             .SetEnvironmentName("production");
 #endif
-        await UnityServices.InitializeAsync(options);
-        InitializeIAP();
+
+        try
+        {
+            await UnityServices.InitializeAsync(options);
+            InitializeIAP();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[IAPManager] Unity Services initialize failed: {ex}");
+        }
     }
 
     private void InitializeIAP()
@@ -39,10 +49,24 @@ public class IAPManager : Singleton<IAPManager>
 
     private async void Connect()
     {
-        await _storeController.Connect();
-        Debug.Log("IAP system successfully initialized and ready to make purchases.");
-        var initialProductsToFetch = BuildProductDefinitions();
-        _storeController.FetchProducts(initialProductsToFetch);
+        if (_storeController == null)
+        {
+            Debug.LogError("[IAPManager] StoreController is null. Cannot connect IAP.");
+            return;
+        }
+
+        try
+        {
+            await _storeController.Connect();
+            Debug.Log("IAP system successfully initialized and ready to make purchases.");
+
+            var initialProductsToFetch = BuildProductDefinitions();
+            _storeController.FetchProducts(initialProductsToFetch);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[IAPManager] IAP connect failed: {ex}");
+        }
     }
 
     private List<ProductDefinition> BuildProductDefinitions()
@@ -77,9 +101,11 @@ public class IAPManager : Singleton<IAPManager>
 
     public bool TryGetProduct(string productId, out Product product)
     {
-        if (!_areProductsFetched)
+        product = null;
+
+        if (!_areProductsFetched || _storeController == null)
         {
-            product = null;
+            Debug.LogWarning($"[IAPManager] Products have not been fetched yet. Product id: {productId}");
             return false;
         }
 
@@ -95,36 +121,34 @@ public class IAPManager : Singleton<IAPManager>
 
     public void Purchase(string productId)
     {
-        if (!_areProductsFetched)
+        if (!_areProductsFetched || _storeController == null)
         {
-            Debug.LogWarning(
-                $"Purchase of product failed. System not connected or failed to fetch product with id '{productId}'.");
+            Debug.LogWarning($"Purchase of product failed. System not connected or failed to fetch product with id '{productId}'.");
             return;
         }
 
         if (!TryGetProduct(productId, out var product))
         {
-            Debug.LogWarning($"A product with id '{productId}' was not fetched or it's fetching failed.");
+            Debug.LogWarning($"A product with id '{productId}' was not fetched or its fetching failed.");
             return;
         }
 
         if (product is { availableToPurchase: false })
         {
-            Debug.LogWarning(
-                "Purchase of product failed. Not purchasing product, as the product is either not found or is not available for purchase.");
+            Debug.LogWarning("Purchase of product failed. Product is either not found or is not available for purchase.");
             return;
         }
 
-        // Buy the product. Expect a response either through OnPurchasePending or the failure events.
-        Debug.Log($"Purchasing product asychronously: '{product.definition.id}'");
+        Debug.Log($"Purchasing product asynchronously: '{product.definition.id}'");
         _storeController.PurchaseProduct(product);
     }
 
     public bool HasProductBeenFetched(string productId, out Product product)
     {
-        if (!_areProductsFetched)
+        product = null;
+
+        if (!_areProductsFetched || _storeController == null)
         {
-            product = null;
             return false;
         }
 
@@ -134,12 +158,16 @@ public class IAPManager : Singleton<IAPManager>
 
     public void RestoreTransactions()
     {
+        if (_storeController == null)
+        {
+            Debug.LogWarning("[IAPManager] Cannot restore transactions because StoreController is null.");
+            return;
+        }
+
         _storeController.RestoreTransactions((result, error) =>
         {
             if (result)
             {
-                // This does not mean anything was restored, merely that the restoration process succeeded.
-                // During this process the ProcessPurchase method of IStoreListener will be invoked for any items the user already owns.
                 Debug.Log("Restoring transactions...");
             }
             else
@@ -157,10 +185,13 @@ public class IAPManager : Singleton<IAPManager>
     private void OnProductsFetched(List<Product> products)
     {
         _areProductsFetched = true;
-        // By default, calling FetchPurchases invokes OnPurchasePending for any pending purchases which have not yet been handled in the session.
-        // You can disable this behaviour with StoreController.ProcessPendingOrdersOnPurchasesFetched(false).
+
+        // By default, calling FetchPurchases invokes OnPurchasePending for any pending purchases
+        // which have not yet been handled in the session.
         _storeController.FetchPurchases();
-        OnProductsFetcheded?.Invoke(products); // The list has only the products that were fetched correctly.
+
+        // Giữ nguyên tên event cũ để không làm hỏng các script đang subscribe.
+        OnProductsFetcheded?.Invoke(products);
     }
 
     private void OnProductsFetchFailed(ProductFetchFailed fail)
@@ -186,9 +217,8 @@ public class IAPManager : Singleton<IAPManager>
 
     private void OnPurchasePending(PendingOrder pendingOrder)
     {
-        // Presume valid for platforms with no receipt validator.
         bool validPurchase = true;
-        // Unity IAP's validation logic is only included on these platforms.
+
         if (_validatePurchases)
         {
 #if USING_IAP
@@ -196,21 +226,22 @@ public class IAPManager : Singleton<IAPManager>
 #endif
         }
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         if (validPurchase)
         {
             foreach (var cartItem in pendingOrder.CartOrdered.Items())
             {
                 var product = cartItem.Product;
                 var id = product.definition.id;
-                // Unlock the appropriate content here.
-                // Content will be automatically restored on supported platforms.
-                // We don't bother with storeSpecificIds, as we use the common ids for everything.
                 Debug.LogError($"Purchased Product: '{id}'");
             }
         }
+        else
+        {
+            Debug.LogWarning("[IAPManager] Purchase validation failed. Purchase will still be confirmed by current flow.");
+        }
 
-        // We call CompletePurchase, informing Unity IAP that the processing on our side is done and the transaction can be closed.
+        // Xác nhận với Unity IAP rằng transaction đã được xử lý.
+        // API verify server sẽ được gọi ở OnPurchaseConfirmed sau khi order được confirm thành công.
         _storeController.ConfirmPurchase(pendingOrder);
     }
 
@@ -222,21 +253,31 @@ public class IAPManager : Singleton<IAPManager>
                 foreach (var cartItem in confirmedOrder.CartOrdered.Items())
                 {
                     var product = cartItem.Product;
-                    Debug.LogError($"Successfully confirmed order: {product.definition.id}");
+                    var productId = product.definition.id;
+
+                    Debug.LogError($"Successfully confirmed order: {productId}");
+
+                    // Call API giống script 1 sau khi mua/confirm thành công.
+                    VerifyPurchaseWithServer(product);
+
+                    OnPurchaseSuccessful?.Invoke(productId);
+
                     _pendingCallback?.Invoke();
                     _pendingCallback = null;
                 }
-
                 break;
+
             case FailedOrder failedOrder:
                 var reason = failedOrder.FailureReason;
                 Debug.LogError($"Order failed: {reason}");
+
                 foreach (var cartItem in failedOrder.CartOrdered.Items())
                 {
                     var product = cartItem.Product;
                     Debug.LogError($"Failed to confirm order for product: {product.definition.id}");
                 }
 
+                _pendingCallback = null;
                 break;
         }
     }
@@ -245,22 +286,64 @@ public class IAPManager : Singleton<IAPManager>
     {
         var reason = failedOrder.FailureReason.ToString();
         Debug.LogError($"Purchase failed: {reason}");
+        _pendingCallback = null;
+    }
+
+    private void VerifyPurchaseWithServer(Product product)
+    {
+        try
+        {
+            string packageId = Application.identifier;
+            string receipt = product != null ? product.receipt : null;
+            string token = AuthManager.IsLoggedIn() ? AuthManager.GetAuthToken() : null;
+
+            if (string.IsNullOrEmpty(token))
+            {
+                Debug.LogWarning("[IAPManager] Chưa đăng nhập (token rỗng) — server có thể từ chối verify.");
+            }
+
+            if (string.IsNullOrEmpty(receipt))
+            {
+                Debug.LogWarning($"[IAPManager] Receipt rỗng cho product: {product?.definition?.id}");
+            }
+
+            ApiService.Instance.VerifyPurchase(packageId, receipt, token,
+                onSuccess: response =>
+                {
+                    Debug.Log($"[IAPManager] Verify purchase OK: {response?.message}");
+                },
+                onError: err =>
+                {
+                    Debug.LogWarning($"[IAPManager] Verify purchase failed: {err}");
+                });
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[IAPManager] Verify purchase threw: {ex}");
+        }
     }
 
     public IEnumerator CreateHandleProduct(IAPProduct pack)
     {
+        if (_storeController == null)
+        {
+            Debug.LogWarning("[IAPManager] Cannot create product handle because StoreController is null.");
+            yield break;
+        }
+
         List<Product> sortedProducts = _storeController.GetProducts()
-            .TakeWhile(item => !item.definition.id.Contains("sale"))
+            .Where(item => !item.definition.id.Contains("sale"))
             .OrderBy(item => item.metadata.localizedPrice)
             .ToList();
+
         foreach (Product product in sortedProducts)
         {
             if (pack.PurchaseID == product.definition.id)
             {
-                var code = "";
-                var price = "";
-                code = product.metadata.isoCurrencyCode;
-                price = product.metadata.localizedPriceString;
+                string code = product.metadata.isoCurrencyCode;
+                string price = product.metadata.localizedPriceString;
+
+                pack.OnPurchase -= HandlePurchase;
                 pack.OnPurchase += HandlePurchase;
                 pack.Setup(product, code, price);
             }
@@ -271,7 +354,26 @@ public class IAPManager : Singleton<IAPManager>
 
     private void HandlePurchase(Product product, Action onComplete)
     {
-        _storeController.PurchaseProduct(product);
+        if (_storeController == null)
+        {
+            Debug.LogWarning("[IAPManager] Cannot purchase because StoreController is null.");
+            return;
+        }
+
+        if (product == null)
+        {
+            Debug.LogWarning("[IAPManager] Cannot purchase because product is null.");
+            return;
+        }
+
+        if (!product.availableToPurchase)
+        {
+            Debug.LogWarning($"[IAPManager] Product is not available to purchase: {product.definition.id}");
+            return;
+        }
+
+        // Gán callback trước khi gọi PurchaseProduct để tránh trường hợp callback bị set muộn.
         _pendingCallback = onComplete;
+        _storeController.PurchaseProduct(product);
     }
 }
